@@ -38,7 +38,7 @@ with open("puzzle-input.txt", "r") as file:
         if digits_of_line[-1] in digits_to_replace:
             digits_of_line[-1] = digits_to_replace[digits_of_line[-1]]
 
-        # Concatenated the first and last digit of line and sum
+        # Join the first and last digit of line and sum
         # with previous calibration value
         sum_calibration_values += int(digits_of_line[0] +
                                       digits_of_line[-1])
