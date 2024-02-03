@@ -14,3 +14,4 @@
   - [X] Part 2
 - [X] Day 5
   - [X] Part 1
+  - [X] Part 2
