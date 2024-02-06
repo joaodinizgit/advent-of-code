@@ -3,38 +3,38 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define IN          1
-#define OUT         0
 #define MAXCOL      3
-#define SMAXCOL     4
-#define MAXCHAR     100
+#define MAXCHAR     300
 #define SENTINEL    -1
+
 #define IN          1
 #define OUT         0
+
 #define MAXLINES    50
 #define MAXSEEDS    20
 
-int fvalues(char ln[100]);
+#define SIZENUMBER  20
+
+
+void fvalues(char ln[100]);
 void ftitle(char line[100]);
 void lowlocnum(int seed, int i);
-int lower_number();
+unsigned int lower_number();
 
 
 char title[20];
-int temporary[5];
+unsigned int temporary[20];
 
-int seeds[SMAXCOL];
+unsigned int seeds[MAXSEEDS];
 
-int *ptr = seeds;
-
-int maps[7][MAXLINES][MAXCOL];
-int low_numbers[MAXSEEDS];
+unsigned int maps[7][MAXLINES][MAXCOL];
+unsigned int low_numbers[MAXSEEDS];
 
 
 int main(void)
 {
     char c;
-    char line[100];
+    char line[MAXCHAR];
     int i, j, k, l, m, n, o, p, q, sm;
     k = 0;
     l = 0;
@@ -46,18 +46,17 @@ int main(void)
     sm = 0;
 
     FILE *f;
-    f = fopen("example.txt", "r");
+    f = fopen("input.txt", "r");
 
     // Read every line from file
     while (fgets(line, MAXCHAR, f)) {
         if (isalnum(*line) > 0) {
             ftitle(line);
-            //printf("%s\n", title);
 
             if (strcmp(title, "seeds") == 0) {
                 fvalues(line);
-                for (i = 0; i < SMAXCOL; ++i) {
-                    *(seeds + i) = temporary[i];
+                for (i = 0; i < MAXSEEDS; ++i) {
+                    seeds[i] = temporary[i];
                 }
             } else if (strcmp(title, "seedtosoil") == 0) {
                 if (isdigit(*line)) {
@@ -127,31 +126,28 @@ int main(void)
     }
 
     // For Part 1:
-    for (i = 0; i < SMAXCOL; ++i) {
+    for (i = 0; i < MAXSEEDS; ++i) {
         lowlocnum(seeds[i], i);
-        //printf("%d: %d  %p\n", seeds[i], *(ptr + i), (ptr + i));
-        //printf("Size of : %d\n", sizeof(seeds));
-        ;
+        printf("%lu ",  seeds[i]);
     }
 
-    // Find the lowers locations
     printf("Lower Locations:\n");
-    for (i = 0; i < 7; ++i) {
-        printf("%d ", low_numbers[i]);
+    for (i = 0; i < 20; ++i) {
+        printf("%lu ", low_numbers[i]);
     }
     printf("\n");
 
     // Find the lower number
-    printf("LOWER NUMBER IS: %d\n", lower_number());
+    printf("LOWER NUMBER IS: %u\n", lower_number());
 
 
     for (k = 0; k < 7; ++k){
         printf("***MAP %d***\n", k);
         i = 0;
         while (maps[k][i][0] != -1) {
-            printf("Linha %d: ", i );
-            for (j = 0; j < 3; ++j) {
-                printf("%d ", maps[k][i][j]);
+            printf("Linha %i: ", i );
+            for (j = 0; j < MAXCOL; ++j) {
+                printf("%lu ", maps[k][i][j]);
             }
             printf("\n");
             ++i;
@@ -180,9 +176,9 @@ void ftitle(char line[])
 }
 
 // Find file's values
-int fvalues(char ln[])
+void fvalues(char ln[])
 {
-    char buffer[20];
+    char buffer[15];
     int i, j, k, status;
     j = k = 0;
     status = OUT;
@@ -195,7 +191,7 @@ int fvalues(char ln[])
             } else if (status == IN){
                 buffer[j] = '\0';
                 j = 0;
-                temporary[k] = atoi(buffer);
+                temporary[k] = atol(buffer);
                 ++k;
                 status = OUT;
             }
@@ -203,11 +199,10 @@ int fvalues(char ln[])
     }
     if (status == IN) {
         buffer[j] = ln[i];
-        temporary[k] = atoi(buffer);
+        temporary[k] = atol(buffer);
         j = 0;
         k = 0;
     }
-
 }
 
 
@@ -228,15 +223,18 @@ void lowlocnum(int seed, int index)
     low_numbers[index] = seed;
 }
 
-int lower_number()
+unsigned int lower_number()
 {
-    int i, j, lower;
-    lower = 0;
+    int i, j;
+    unsigned int lower;
+    lower = 4294967295;
 
-    for (i = 0; i < 4; ++i) {
-        for (j = 0; j < 4; ++j) {
-            if (low_numbers[i] < low_numbers[j]) {
+    for (i = 0; i < 1; ++i) {
+        for (j = 0; j < MAXSEEDS; ++j) {
+            if (low_numbers[i] <= low_numbers[j] && low_numbers[i] < lower) {
                 lower = low_numbers[i];
+            } else if (low_numbers[j] < lower) {
+                lower = low_numbers[j];
             }
         }
     }
