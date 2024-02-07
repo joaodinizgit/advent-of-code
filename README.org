@@ -13,5 +13,5 @@
   - [X] Part 1
   - [X] Part 2
 - [X] Day 5
-  - [X] Part 1
-  - [X] Part 2
+  - [X] Part 1 in C(Faster) and python
+  - [X] Part 2 in C(Faster) and python
