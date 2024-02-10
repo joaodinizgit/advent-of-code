@@ -1,0 +1,17 @@
+The boat has a start limit of zero millimeters per millisecond.
+Each whole millisecond you spend at beginning of the race
+holding down the button, the boat speed increases by one milimeter.
+
+Time:      7  15   30
+Distance:  9  40  200
+
+- Don't hold the button 0 milimeters;
+- Hold 1 second, 6 milimeters;
+- Hold 2 seconds, 10 milimeters;
+- Hold 3 seconds, 12 milimeters;
+- Hold 4 seconds, 12 milimeters;
+- Hold 5 seconds, 10 milimeters;
+- Hold 6 seconds, 6 milimeters;
+- Hold 7 seconds, 0 milimeters;
+
+2, 3, 4, 5
