@@ -20,11 +20,11 @@ int main(void)
     for (i = 0; i < MAXCOL; i++) {
         nways *= pways(f[0][i], f[1][i]);
     }
-    printf("Answer Part 1: %i. \n", nways);
+    printf("Answer Part 1: %i \n", nways);
 
     nways = 1;
     nways *= pways(g[0], g[1]);
-    printf("Answer Part 2: %i. \n", nways);
+    printf("Answer Part 2: %i \n", nways);
 }
 
 unsigned long long pways(int t, unsigned long long d)
