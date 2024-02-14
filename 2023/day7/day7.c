@@ -106,7 +106,6 @@ void type(char *h)
     }
     // End - Included to Part 2.
 
-
     if (in(5, lc, LABELS)) {
         // Five of a Kind
         strcpy(m[6][c[6]], h);
