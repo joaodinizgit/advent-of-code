@@ -7,10 +7,10 @@
 #include <stdlib.h>
 
 #define MAXCHAR     20
-#define ROWS        1000    // Use 1000 with input.txt.
+#define ROWS        5
 #define CARDS       5
 #define LABELS      13
-#define NCHARS      11      // "QQ53K 1000\0".
+#define NCHARS      11
 #define TYPES       7
 
 void type(char *h);
@@ -19,20 +19,20 @@ int conv(char card);
 int in(int n, int lc[], int limit);
 
 // c[TYPES]: counters of hands by labes.
-int c[TYPES]= {0, 0, 0, 0, 0, 0, 0};
-char m[TYPES][ROWS][NCHARS];
+int c[TYPES] = {};
+char m[TYPES][ROWS][NCHARS] = {};
 
 
 int main(void)
 {
     int i, j;
-    char line[MAXCHAR];
+    char line[MAXCHAR] = {};
     char *p;
 
     FILE *f;
-    char hands[ROWS][NCHARS]; // QQ53K 1000\0
+    char hands[ROWS][NCHARS] = {};
 
-    f = fopen("input.txt", "r");
+    f = fopen("example.txt", "r");
     if (f == NULL) {
         printf("FILE NOT FOUND! \n");
         return 0;
@@ -45,6 +45,7 @@ int main(void)
     }
 
     for (i = 0; i < ROWS; i++) {
+        printf("%s \n", hands[i]);
         type(hands[i]);
     }
 
@@ -75,7 +76,7 @@ void type(char *h)
 {
     // Count the letters of each hand for each label.
     char lbs[LABELS] = {"AKQJT98765432"};
-    int lc[LABELS] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    int lc[LABELS] = {};
     int i, j;
     for (i = 0; i < CARDS; i++) {
         for (j = 0; j < LABELS; j++) {
@@ -87,31 +88,31 @@ void type(char *h)
     }
 
     if (in(5, lc, LABELS)) {
-        // Five of a Kind.
+        printf("%s\tFive of a Kind\n", h);
         strcpy(m[6][c[6]], h);
         c[6]++;
     } else if (in(4, lc, LABELS)) {
-        // Four of a Kind.
+        printf("%s\tFour of a Kind\n", h);
         strcpy(m[5][c[5]], h);
         c[5]++;
     } else if ((in(3, lc, LABELS) && in(2, lc, LABELS))) {
-        // Full House.
+        printf("%s\tFull House\n, h");
         strcpy(m[4][c[4]], h);
         c[4]++;
     } else if ((in(3, lc, LABELS) && in(1, lc, LABELS) == 2)) {
-        // Three of a kind.
+        printf("%s\tThree of a kind\n", h);
         strcpy(m[3][c[3]], h);
         c[3]++;
     } else if ((in(2, lc, LABELS) == 2 && in(1, lc, LABELS) == 1)) {
-        // Two Pair.
+        printf("%s\tTwo Pair\n", h);
         strcpy(m[2][c[2]], h);
         c[2]++;
     } else if ((in(2, lc, LABELS) == 1 && in(1, lc, LABELS) == 3)) {
-        // One Pair.
+        printf("%s\tOne Pair\n", h);
         strcpy(m[1][c[1]], h);
         c[1]++;
     } else if((in(1, lc, LABELS) == 5)) {
-        // High Card.
+        printf("%s\tHigh Card\n", h);
         strcpy(m[0][c[0]], h);
         c[0]++;
     }
@@ -136,7 +137,7 @@ int in(int n, int lc[], int limit)
 void sort(char n[][NCHARS], int rows)
 {
     int i, a, b, j, changes;
-    char tmp[NCHARS];
+    char tmp[NCHARS] = {};
     do {
         changes = 0;
         for (j = 0; j < rows - 1; j++) {
@@ -172,7 +173,7 @@ case 'K':
 case 'Q':
     return 12;
 case 'J':
-    return 11;
+    return 1;
 case 'T':
     return 10;
 case '9':
@@ -195,3 +196,6 @@ case '2':
 }
 
 /* Answer Part 1: 250347426*/
+
+/* For Part 2: change conv() case '11' from
+11 to 1 */
