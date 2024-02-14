@@ -1,4 +1,4 @@
-/*  Advent of Code 2023, Day 7 Part 1
+/*  Advent of Code 2023, Day 7 Part 1 and 2.
     Author: João Diniz.
     joaodiniz@msn.com
 */
