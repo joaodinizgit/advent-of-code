@@ -213,5 +213,5 @@ case '2':
 /* Answer Part 1: 250347426 */
 /* Answer Part 2: 251224870 */
 
-/* For Part 2: change conv() case '11' from
+/* For Part 2: change conv() case 'J' from
 11 to 1 */
