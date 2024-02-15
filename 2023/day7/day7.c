@@ -22,17 +22,14 @@ int in(int n, int lc[], int limit);
 int c[TYPES] = {};
 char m[TYPES][ROWS][NCHARS] = {};
 
-
 int main(void)
 {
     int i, j;
     char line[MAXCHAR] = {};
     char *p;
-
-    FILE *f;
     char hands[ROWS][NCHARS] = {};
 
-    f = fopen("input.txt", "r");
+    FILE *f = fopen("input.txt", "r");
     if (f == NULL) {
         printf("FILE NOT FOUND! \n");
         return 0;
@@ -48,14 +45,15 @@ int main(void)
         type(hands[i]);
     }
 
+    fclose(f);
+
     for (i = 0; i < TYPES; i++) {
         if (c[i] > 1) {
             sort(m[i], c[i]);
         }
     }
 
-    int rank;
-    rank = 1;
+    int rank = 1;
     char *bid;
     unsigned int twin = 0;
     for (i = 0; i < TYPES; i++) {
@@ -67,12 +65,13 @@ int main(void)
         }
     }
     printf("Answer. Total: %i \n", twin);
+    return 0;
 }
 
 void type(char *h)
 {
     // Count the letters of each hand for each label.
-    char lbs[LABELS] = {"AKQJT98765432"};
+    char *lbs = "AKQJT98765432";
     int lc[LABELS] = {};
     int i, j;
     for (i = 0; i < CARDS; i++) {

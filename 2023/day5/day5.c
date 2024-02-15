@@ -69,7 +69,7 @@ int main(void)
             }
         }
     }
-
+    fclose(f);
     unsigned int *low_numb[2];
     low_numb[0] = (unsigned int *)malloc(20 * sizeof(unsigned int));
     low_numb[1] = (unsigned int *)malloc(20 * sizeof(unsigned int));
@@ -134,12 +134,12 @@ int main(void)
 
         *(ten_lowers[0] + i) = *lowest_pair[0];
         *(ten_lowers[1] + i) = *lowest_pair[1];
-    }
 
-    free(nums[0]);
-    free(nums[1]);
-    free(lowest_pair[0]);
-    free(lowest_pair[1]);
+        free(lowest_pair[0]);
+        free(lowest_pair[1]);
+        free(nums[0]);
+        free(nums[1]);
+    }
 
     printf("Part 2: \n");
     printf("Ten Lowest Pairs: \n");
@@ -183,8 +183,13 @@ int main(void)
         }
         ++h;
     }
+
     free(lowest_pair[0]);
     free(lowest_pair[1]);
+    free(nums[0]);
+    free(nums[1]);
+    free(ten_lowers[0]);
+    free(ten_lowers[1]);
 }
 
 
