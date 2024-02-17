@@ -21,3 +21,4 @@
 - [X] [[file:2023/day7/day7.c][Day 7]]
   - [X] Part 1 (C).
   - [X] Part 2 (C).
+- [X] [[file:2023/day8/day8.c][Day 8 Part 1 and 2 in C Programming Language.]]
