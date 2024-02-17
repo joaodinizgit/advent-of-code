@@ -133,6 +133,7 @@ int main(void)
     return 0;
 }
 
+
 int fe(char *name, int limit, node *n)
 {
     int i;
@@ -143,6 +144,7 @@ int fe(char *name, int limit, node *n)
     }
     return -1;
 }
+
 
 // Function to find the LCM of two numbers.
 long lcm(long a, long b) {
@@ -160,7 +162,6 @@ long gcd(long a, long b) {
     }
     return a;
 }
-
 
 /*  Answer Part 1: 19637
     Answer Part 2: 8811050362409
