@@ -1,4 +1,4 @@
-/*  Advent of Code 2023, Day8 Part 1
+/*  Advent of Code 2023, Day8 Part 1 and 2.
     Author: João Diniz.
     joaodiniz@msn.com
 */
@@ -7,7 +7,7 @@
 #include <string.h>
 
 #define MAXCHAR     500
-#define CHARNODE    20      // "AAA = (BBB, CCC)\n\0"
+#define CHARNODE    20
 
 typedef struct node {
     char *name;
@@ -31,7 +31,7 @@ int main(void)
     char *line = malloc(MAXCHAR * sizeof(char));
     fgets(line, MAXCHAR, f);
     strtok(line, "\n");
-    char *d = malloc(strlen(line) * sizeof(char));
+    char *d = malloc(MAXCHAR * sizeof(char));
     strcpy(d, line);
     free(line);
 
@@ -55,12 +55,13 @@ int main(void)
         }
     }
     fclose(f);
+    free(line);
 
-    int counter = 0;
+    int steps = 0;
     int index = fe("AAA", c, n);
     if (index == -1) {
         printf("No direction found! \n");
-        //return 1;
+        return 1;
     } else {
         int i = 0;
         while (strcmp(n[index].name, "ZZZ") != 0) {
@@ -74,50 +75,38 @@ int main(void)
             } else {
                 i++;
             }
-            counter++;
+            steps++;
         }
-        printf("Answer Part 1 Steps: %i \n", counter);
+        printf("Answer Part 1: %i \n", steps);
     }
 
-
-    // For Part 2
-    int count = 0;
-    int ewa[10];
-    int j = 0;
+    int ewa[10];    // End With A.
+    int na = 0;     // Qty numbers end with A.
     for (int i = 0; i < c; i++) {
         if (n[i].name[2] == 'A') {
-            ewa[j] = i;
-            count++;
-            j++;
+            ewa[na++] = i;
         }
     }
 
-    for (int i = 0; i < count; i++) {
-        printf("Index/names end with A: %i %s \n", ewa[i], n[ewa[i]].name);
-    }
-    //printf("count: %i \n", count);
-
-    int i = 0;
-    counter = 0;
-    int totalizer = 0;
-    int ind;
-    int rep[count];
-    while (totalizer < count) {
-        for (int k = 0; k < count; k++) {
+    int rep[na]; // Repetion.
+    int t, i;
+    i = t = index = steps = 0;
+    while (t < na) {
+        for (int k = 0; k < na; k++) {
             if (d[i] == 'L') {
-                ind = fe(n[ewa[k]].left, c, n);
-                if (n[ind].name[2] == 'Z') {
-                    totalizer++;
-                    rep[k] = counter + 1;
+                index = fe(n[ewa[k]].left, c, n);
+                if (n[index].name[2] == 'Z') {
+                    t++;
+                    rep[k] = steps + 1;
                 }
-                ewa[k] = ind;
+                ewa[k] = index;
             } else if (d[i] == 'R') {
-                ind = fe(n[ewa[k]].right, c, n);
-                if (n[ind].name[2] == 'Z') {
-                    totalizer++;
-                    rep[k] = counter + 1;
+                index = fe(n[ewa[k]].right, c, n);
+                if (n[index].name[2] == 'Z') {
+                    t++;
+                    rep[k] = steps + 1;
                 }
-                ewa[k] = ind;
+                ewa[k] = index;
             }
         }
         if (i == strlen(d) - 1) {
@@ -125,16 +114,23 @@ int main(void)
         } else {
             i++;
         }
-        counter++;
+        steps++;
     }
 
-    // Calc the LCM.
+    for (i = 0; i < c; i++) {
+        free(n[i].name);
+        free(n[i].left);
+        free(n[i].right);
+    }
+    free(d);
+
+    // Calc the LCM(Least Common Multiple).
     long result1 = lcm(rep[0], rep[1]);
     long result2 = lcm(result1, rep[2]);
     long result3 = lcm(result2, rep[3]);
     long result4 = lcm(result3, rep[4]);
     printf("Answer Part 2: %li \n", lcm(result4, rep[5]));
-
+    return 0;
 }
 
 int fe(char *name, int limit, node *n)
@@ -153,7 +149,9 @@ long lcm(long a, long b) {
     return (a * b) / gcd(a, b);
 }
 
-// Function to find the Greatest Common Divisor (GCD) using the Euclidean algorithm.
+
+/* Find the Greatest Common Divisor
+(GCD) using the Euclidean algorithm. */
 long gcd(long a, long b) {
     while (b != 0) {
         long temp = b;
@@ -162,7 +160,6 @@ long gcd(long a, long b) {
     }
     return a;
 }
-
 
 
 /*  Answer Part 1: 19637
