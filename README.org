@@ -2,23 +2,12 @@
 #+AUTHOR: João Diniz
 
 ** Advent of Code 2023
-- [X] [[file:2023/day1][Day 1]]
-- [X] [[file:2023/day2][Day 2]]
-  - [X] Part 1
-  - [X] Part 2
-- [X] [[file:2023/day3][Day 3]]
-  - [X] Part 1
-  - [X] Part 2
-- [X] [[file:2023/day4][Day 4]]
-  - [X] Part 1
-  - [X] Part 2
-- [X] [[file:2023/day5/][Day 5]]
-  - [X] Part 1 in C(Faster) and python
-  - [X] Part 2 in C(Faster) and python
-- [X] [[file:2023/day6/day6.c][Day 6]]
-  - [X] Part 1 (C).
-  - [X] Part 2 (C).
-- [X] [[file:2023/day7/day7.c][Day 7]]
-  - [X] Part 1 (C).
-  - [X] Part 2 (C).
+- [X] [[file:2023/day1/day1.py][Day 1 in Python.]]
+- [X] [[file:2023/day2/day2.py][Day 2 Part 1 and 2 in Python.]]
+- [X] [[file:2023/day3/day3.py][Day 3 Part 1 and 2 in Python.]]
+- [X] [[file:2023/day4/day4.py][Day 4 Part 1 and 2 in Python.]]
+- [X] [[file:2023/day5/day5.py][Day 5 Part 1 and 2 in in Python.]]
+- [X] [[file:2023/day5/day5.c][Day 5 Part 1 and 2 in C Programming Language.(fast)]]
+- [X] [[file:2023/day6/day6.c][Day 6 Part 1 and 2 in C Programming Language.]]
+- [X] [[file:2023/day7/day7.c][Day 7 Part 1 and 2 in C Programming Language.]]
 - [X] [[file:2023/day8/day8.c][Day 8 Part 1 and 2 in C Programming Language.]]
