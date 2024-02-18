@@ -17,7 +17,7 @@ typedef struct node {
     char *right;
 }node;
 
-int fe(char *name, int limit, node *n);
+int next(char *name, int limit, node *n);
 long lcm(long a, long b);
 long gcd(long a, long b);
 
@@ -33,26 +33,26 @@ int main(void)
     char *line = malloc(MAXCHAR * sizeof(char));
     fgets(line, MAXCHAR, f);
     strtok(line, "\n");
-    char *d = malloc(MAXCHAR * sizeof(char));
-    strcpy(d, line);
+    char *instruction = malloc(MAXCHAR * sizeof(char));
+    strcpy(instruction, line);
     free(line);
 
-    node n[700] = {};
+    node nodes[700] = {};
 
     line = malloc(CHARNODE * sizeof(char));
-    int c = 0;
+    int c = 0;  // Counter of nodes.
     while (fgets(line, CHARNODE, f)) {
         if (*line != '\n' && *line != ' ' && *line != '\t') {
             char *p;
             p = strtok(line, " = ");
-            n[c].name = malloc(4 * sizeof(char));
-            strcpy(n[c].name, p);
+            nodes[c].name = malloc(4 * sizeof(char));
+            strcpy(nodes[c].name, p);
             p = strtok(NULL, " = (,");
-            n[c].left = malloc(4 * sizeof(char));
-            strcpy(n[c].left, p);
+            nodes[c].left = malloc(4 * sizeof(char));
+            strcpy(nodes[c].left, p);
             p = strtok(NULL, " )");
-            n[c].right = malloc(4 * sizeof(char));
-            strcpy(n[c].right, p);
+            nodes[c].right = malloc(4 * sizeof(char));
+            strcpy(nodes[c].right, p);
             c++;
         }
     }
@@ -60,19 +60,19 @@ int main(void)
     free(line);
 
     int steps = 0;
-    int index = fe("AAA", c, n);
+    int index = next("AAA", c, nodes);
     if (index == -1) {
         printf("No direction found! \n");
         return 1;
     } else {
         int i = 0;
-        while (strcmp(n[index].name, "ZZZ") != 0) {
-            if (d[i] == 'L') {
-                index = fe(n[index].left, c, n);
-            } else if (d[i] == 'R') {
-                index = fe(n[index].right, c, n);
+        while (strcmp(nodes[index].name, "ZZZ") != 0) {
+            if (instruction[i] == 'L') {
+                index = next(nodes[index].left, c, nodes);
+            } else if (instruction[i] == 'R') {
+                index = next(nodes[index].right, c, nodes);
             }
-            if (i == strlen(d) - 1) {
+            if (i == strlen(instruction) - 1) {
                 i = 0;
             } else {
                 i++;
@@ -83,35 +83,36 @@ int main(void)
     }
 
     int ewa[10];    // End With A.
-    int na = 0;     // Qty numbers end with A.
+    int na = 0;     // Qty end with A.
     for (int i = 0; i < c; i++) {
-        if (n[i].name[2] == 'A') {
-            ewa[na++] = i;
+        if (nodes[i].name[2] == 'A') {
+            ewa[na] = i;
+            na++;
         }
     }
 
-    int rep[na]; // Repetion.
+    int rep[na]; // Repetition.
     int t, i;
     i = t = index = steps = 0;
     while (t < na) {
         for (int k = 0; k < na; k++) {
-            if (d[i] == 'L') {
-                index = fe(n[ewa[k]].left, c, n);
-                if (n[index].name[2] == 'Z') {
+            if (instruction[i] == 'L') {
+                index = next(nodes[ewa[k]].left, c, nodes);
+                if (nodes[index].name[2] == 'Z') {
                     t++;
                     rep[k] = steps + 1;
                 }
                 ewa[k] = index;
-            } else if (d[i] == 'R') {
-                index = fe(n[ewa[k]].right, c, n);
-                if (n[index].name[2] == 'Z') {
+            } else if (instruction[i] == 'R') {
+                index = next(nodes[ewa[k]].right, c, nodes);
+                if (nodes[index].name[2] == 'Z') {
                     t++;
                     rep[k] = steps + 1;
                 }
                 ewa[k] = index;
             }
         }
-        if (i == strlen(d) - 1) {
+        if (i == strlen(instruction) - 1) {
             i = 0;
         } else {
             i++;
@@ -120,11 +121,11 @@ int main(void)
     }
 
     for (i = 0; i < c; i++) {
-        free(n[i].name);
-        free(n[i].left);
-        free(n[i].right);
+        free(nodes[i].name);
+        free(nodes[i].left);
+        free(nodes[i].right);
     }
-    free(d);
+    free(instruction);
 
     // Calc the LCM(Least Common Multiple).
     long result1 = lcm(rep[0], rep[1]);
@@ -136,7 +137,8 @@ int main(void)
 }
 
 
-int fe(char *name, int limit, node *n)
+// Find the next element and return the index.
+int next(char *name, int limit, node *n)
 {
     int i;
     for (i = 0; i < limit; i++) {
