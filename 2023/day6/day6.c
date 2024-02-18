@@ -4,8 +4,11 @@
 */
 #include <stdio.h>
 
-#define MAXROW  2
-#define MAXCOL  4
+enum {
+    MAXROW = 2,
+    MAXCOL = 4
+};
+
 
 unsigned long long pways(int t, unsigned long long d);
 

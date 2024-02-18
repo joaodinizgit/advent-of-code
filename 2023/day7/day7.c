@@ -6,12 +6,14 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define MAXCHAR     20
-#define ROWS        1000
-#define CARDS       5
-#define LABELS      13
-#define NCHARS      11
-#define TYPES       7
+enum {
+    MAXCHAR = 20,
+    ROWS    = 1000,
+    CARDS   = 5,
+    LABELS  = 13,
+    NCHARS  = 11,
+    TYPES   = 7
+};
 
 void type(char *h);
 void sort(char n[][NCHARS], int rows);

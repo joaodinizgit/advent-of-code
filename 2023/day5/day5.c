@@ -7,15 +7,17 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define MAXCHAR         300
-#define SENTINEL        -1
-#define IN              1
-#define OUT             0
-#define MAXROWS         50
-#define MAXCOL          3
-#define MAXSEEDS        20
-#define SIZENUMBER      20
-#define MAXSAMPLES      20000
+enum {
+    MAXCHAR     = 300,
+    SENTINEL    = -1,
+    IN          = 1,
+    OUT         = 0,
+    MAXROWS     = 50,
+    MAXCOL      = 3,
+    MAXSEEDS    = 20,
+    SIZENUMBER  = 20,
+    MAXSAMPLES  = 20000
+};
 
 void fvalues(char ln[100]);
 void ftitle(char line[100]);

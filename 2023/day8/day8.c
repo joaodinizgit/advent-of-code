@@ -6,8 +6,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAXCHAR     500
-#define CHARNODE    20
+enum {
+    MAXCHAR  = 500,
+    CHARNODE = 20
+};
 
 typedef struct node {
     char *name;
