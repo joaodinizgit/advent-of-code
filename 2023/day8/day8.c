@@ -83,7 +83,7 @@ int main(void)
     }
 
     int ewa[10];    // End With A.
-    int na = 0;     // Qty end with A.
+    int na = 0;     // Qty of nodes names end with A.
     for (int i = 0; i < c; i++) {
         if (nodes[i].name[2] == 'A') {
             ewa[na] = i;
@@ -92,10 +92,10 @@ int main(void)
     }
 
     int rep[na]; // Repetition.
-    int t, i;
+    int t, i, k;
     i = t = index = steps = 0;
     while (t < na) {
-        for (int k = 0; k < na; k++) {
+        for (k = 0; k < na; k++) {
             if (instruction[i] == 'L') {
                 index = next(nodes[ewa[k]].left, c, nodes);
                 if (nodes[index].name[2] == 'Z') {
