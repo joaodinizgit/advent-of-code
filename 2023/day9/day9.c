@@ -8,7 +8,6 @@
 
 enum {
     MAXCHAR = 1000,
-    MAXROWS = 200,
     MAXITEMS = 21
 };
 
