@@ -23,6 +23,10 @@ int main(void)
 {
     // Copy data of file in a variable.
     FILE *f = fopen("input.txt", "r");
+    if (f == NULL) {
+        printf("File not found!\n");
+        return 1;
+    }
     char *line;
     int hist[MAXROWS][MAXITEMS];
     int lc = 0;     // Line count;
