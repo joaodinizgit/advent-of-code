@@ -9,7 +9,7 @@
 enum {
     MAXCHAR = 1000,
     MAXROWS = 200,
-    MAXITEMS = 30
+    MAXITEMS = 21
 };
 
 void nextval(int *p, int limit);
@@ -18,6 +18,7 @@ int first_ext(int *p, int limit);
 int left[MAXITEMS] = {};
 int nleft = 0;
 int sum_right = 0;
+int sum_left = 0;
 
 int main(void)
 {
@@ -28,8 +29,7 @@ int main(void)
         return 1;
     }
     char *line;
-    int hist[MAXROWS][MAXITEMS];
-    int lc = 0;     // Line count;
+    int hist[MAXITEMS];
     int nvals;
     int i, j;
 
@@ -38,28 +38,23 @@ int main(void)
         nvals = 0;
         char *p;
         p = strtok(line, " ");
-        hist[lc][nvals] = atoi(p);
+        hist[nvals] = atoi(p);
         nvals++;
         while (p != NULL) {
             p = strtok(NULL, " ");
             if (p != NULL) {
-                hist[lc][nvals] = atoi(p);
+                hist[nvals] = atoi(p);
                 nvals++;
             }
         }
-        lc++;
-    }
 
-    fclose(f);
-    free(line);
-
-    int sum_left = 0;
-    for (i = 0; i < lc; i++) {
-        nextval(hist[i], nvals);
+        nextval(hist, nvals);
         sum_left += first_ext(left, nleft);
         nleft = 0;
     }
 
+    fclose(f);
+    free(line);
     printf("Sum of extrapolated right is: %i \n", sum_right);
     printf("Sum of extrapolated left is: %i \n", sum_left);
 }
