@@ -1,5 +1,5 @@
-/*  Advent of Code 2023 Day 9 Part 1
-    Author: João Diniz
+/*  Advent of Code 2023 Day 9 Part 1 and 2.
+    Author: João Diniz.
     joaodiniz@msn.com
 */
 #include <stdio.h>
@@ -7,37 +7,38 @@
 #include <string.h>
 
 enum {
-    MAXCHAR = 1000
-
+    MAXCHAR = 1000,
+    MAXROWS = 200,
+    MAXITEMS = 30
 };
 
-int nextval(int *p, int limit);
+void nextval(int *p, int limit);
+int first_ext(int *p, int limit);
 
-int total = 0;
+int left[MAXITEMS] = {};
+int nleft = 0;
+int sum_right = 0;
 
 int main(void)
 {
     // Copy data of file in a variable.
-    FILE *f = fopen("example.txt", "r");
+    FILE *f = fopen("input.txt", "r");
     char *line;
-    int hist[200][30];
+    int hist[MAXROWS][MAXITEMS];
     int lc = 0;     // Line count;
     int nvals;
     int i, j;
-    int sexv = 0;
 
     line = malloc(MAXCHAR * sizeof(char));
     while (fgets(line, MAXCHAR, f)) {
         nvals = 0;
         char *p;
         p = strtok(line, " ");
-        //printf("Line %s \n", p);
         hist[lc][nvals] = atoi(p);
         nvals++;
         while (p != NULL) {
             p = strtok(NULL, " ");
             if (p != NULL) {
-                //printf("%s \n", p);
                 hist[lc][nvals] = atoi(p);
                 nvals++;
             }
@@ -45,43 +46,59 @@ int main(void)
         lc++;
     }
 
-    printf("There are: %i lines, nvalues %i\n", lc, nvals);
+    fclose(f);
+    free(line);
+
+    int sum_left = 0;
     for (i = 0; i < lc; i++) {
-        //for (j = 0; j < nvals; j++) {
-            //printf("%i\n", hist[i][j]);
-            nextval(hist[i], nvals);
-        //}
+        nextval(hist[i], nvals);
+        sum_left += first_ext(left, nleft);
+        nleft = 0;
     }
 
-    printf("TOTAL IS %i", total);
-
+    printf("Sum of extrapolated right is: %i \n", sum_right);
+    printf("Sum of extrapolated left is: %i \n", sum_left);
 }
 
-int nextval(int *p, int limit) {
+// Sum all right extrapolated values.
+void nextval(int *p, int limit) {
     int i, j, dif;
     int tmp[limit];
     j = 0;
     for (i = 0; i < limit - 1 ; i++) {
-        //printf("%i ", *(p + i));
-        // Subtract each one with the previous
         dif = *(p + i + 1) - *(p + i);
-        //printf("Difference %i \n", dif);
         tmp[j] = dif;
         j++;
     }
-    printf("\n");
 
-    // Sum the last temp with the last of p
-    total += *(p + limit - 1);
-    for (i = 0; i < j; i++) {
-        printf("%i ", tmp[i]);
-    }
-    printf("\n");
+    sum_right += *(p + limit - 1);
+
+    /* Copy all first numbers of all iterations in a array.
+       to use to calc the left-most history. */
+    left[nleft] = *(p + 0);
+    nleft++;
 
     for (i = 0; i < j; i++) {
-        if (tmp[i] > 0) {
+        if (tmp[i] != 0) {
             nextval(tmp, j);
             break;
         }
     }
 }
+
+
+// Compute and return the extrapolated first number.
+int first_ext(int *p, int limit)
+{
+    int i;
+    int res = 0;
+    for (i = limit - 1; i >= 0; i--) {
+        res = *(p + i) - res;
+    }
+    return res;
+}
+
+
+/*  Answer Part 1: 2075724761
+    Answer Part 2: 1072
+*/
