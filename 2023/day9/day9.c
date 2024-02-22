@@ -28,7 +28,7 @@ int main(void)
         return 1;
     }
     char *line;
-    int hist[MAXITEMS];
+    int hist[MAXITEMS] = {};
     int nvals;
     int i, j;
 
