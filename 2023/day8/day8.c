@@ -26,8 +26,8 @@ int main(void)
 {
     FILE *f = fopen("input.txt", "r");
     if (f == NULL) {
-        printf("FILE NOT FOUND! \n");
-        return 0;
+        printf("File not Found!\n");
+        return 1;
     }
 
     char *line = malloc(MAXCHAR * sizeof(char));
@@ -64,27 +64,28 @@ int main(void)
     if (index == -1) {
         printf("No direction found! \n");
         return 1;
-    } else {
-        int i = 0;
-        while (strcmp(nodes[index].name, "ZZZ") != 0) {
-            if (instruction[i] == 'L') {
-                index = next(nodes[index].left, c, nodes);
-            } else if (instruction[i] == 'R') {
-                index = next(nodes[index].right, c, nodes);
-            }
-            if (i == strlen(instruction) - 1) {
-                i = 0;
-            } else {
-                i++;
-            }
-            steps++;
-        }
-        printf("Answer Part 1: %i \n", steps);
     }
+
+    int i = 0;
+    while (strcmp(nodes[index].name, "ZZZ") != 0) {
+        if (instruction[i] == 'L') {
+            index = next(nodes[index].left, c, nodes);
+        } else if (instruction[i] == 'R') {
+            index = next(nodes[index].right, c, nodes);
+        }
+        if (i == strlen(instruction) - 1) {
+            i = 0;
+        } else {
+            i++;
+        }
+        steps++;
+    }
+    printf("Answer Part 1: %i \n", steps);
+
 
     int ewa[10];    // End With A.
     int na = 0;     // Qty of nodes names end with A.
-    for (int i = 0; i < c; i++) {
+    for (i = 0; i < c; i++) {
         if (nodes[i].name[2] == 'A') {
             ewa[na] = i;
             na++;
@@ -92,7 +93,7 @@ int main(void)
     }
 
     int rep[na]; // Repetition.
-    int t, i, k;
+    int t, k;
     i = t = index = steps = 0;
     while (t < na) {
         for (k = 0; k < na; k++) {
