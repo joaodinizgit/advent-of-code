@@ -8,21 +8,23 @@
 
 enum {
     MAXCHAR = 1000,
-    MAXCOLS = 140
+    MAXROWS = 140
 };
+
+void rush(int *r, int *c, char *map[], char *d);
 
 int main(void)
 {
-    FILE *f = fopen("example1.txt", "r");
+    FILE *f = fopen("input.txt", "r");
     if (f == NULL) {
         printf("File not foud!\n");
         return 1;
     }
 
     char *line;
-    char *map[MAXCOLS] = {};
+    char *map[MAXROWS] = {};
     int nrows = 0;
-    int i;
+    int i, j;
 
     line = malloc(MAXCHAR * sizeof(char));
     while (fgets(line, MAXCHAR, f) != NULL) {
@@ -35,9 +37,104 @@ int main(void)
 
     free(line);
     fclose(f);
-
+    int row = 0;
+    int col = 0;
+    int rorigin = 0;
+    int colorigin = 0;
     for (i = 0; i < nrows; i++) {
-        printf("%s \n", map[i]);
+        for (j = 0; j < strlen(map[i]); j++) {
+            if (map[i][j] == 'S') {
+                //printf("%c at map[%i][%i] \n" , map[i][j], i, j);
+                row = i;
+                col = j;
+                rorigin = i;
+                colorigin = j;
+                break;
+            }
+        //printf("%c at map[%i][%i] \n" , map[i][j], i, j);
+        }
     }
+    char dir[1];
+    printf("%c at map[%i][%i] \n" , map[row][col], row, col); // Start point.
+    //rush(&row, &col, map);
+    int counter = 0;
+    rush(&row, &col, map, dir); // To right
+    while (row != rorigin || col != colorigin) {
+        printf("map[%i][%i] %c \n", row, col, map[row][col]);
+        rush(&row, &col, map, dir);
+        counter++;
+    }
+
+    printf("STEPS ARE %i\n", counter);
+    printf("STEPS ARE %i\n", counter/2 + 1);
+
+
+}
+
+void rush(int *r, int *c, char *map[], char *d)
+{
+    char tile   = map[*r][*c];
+    //char teast  = map[*r][*c + 1];
+    //char tsouth = map[*r + 1][*c];
+    //char twest  = map[*r][*c - 1];
+    //char tnorth = map[*r - 1][*c];
+    printf("%c\n", *d);
+
+    // S will have exactly two connected pipes
+    if (tile == 'S' && (map[*r - 1][*c] == '7' || map[*r - 1][*c] == '|' || map[*r - 1][*c] == 'F')) {
+        printf("Start at NORTH\n");
+        *r = *r - 1;
+        *d = 'N';
+    } else if (tile == 'S' && (map[*r][*c + 1] == '-' || map[*r][*c + 1] == '7' || map[*r][*c + 1] == 'J')) {
+        printf("Start at EAST\n");
+        *c = *c + 1;
+        *d = 'E';
+    } else if (tile == 'S' && (map[*r + 1][*c] == '|' || map[*r + 1][*c] == 'J' || map[*r + 1][*c] == 'L')) {
+        printf("Start at SOUTH\n");
+        *r = *r + 1;
+        *d = 'S';
+    } else if (tile == 'S' && (map[*r][*c - 1] == '-' || map[*r][*c - 1] == 'L' || map[*r][*c - 1] == 'F')) {
+        printf("Start at WEST\n");
+        *c = *c - 1;
+        *d = 'W';
+    } else if (tile == '-' && *d == 'E') {
+        *c = *c + 1;
+        *d = 'E';
+    } else if (tile == '-' && *d == 'W') {
+        *c = *c - 1;
+        *d = 'W';
+    } else if (tile == '7' && *d == 'E') {
+        *r = *r + 1;
+        *d = 'S';
+    } else if (tile == '7' && *d == 'N') {
+        *c = *c - 1;
+        *d = 'W';
+    } else if (tile == '|' && *d == 'S') {
+        *r = *r + 1;
+        *d = 'S';
+    } else if (tile == '|' && *d == 'N') {
+        *r = *r - 1;
+        *d = 'N';
+    } else if (tile == 'J' && *d == 'S') {
+        *c = *c - 1;
+        *d = 'W';
+    } else if (tile == 'J' && *d == 'E') {
+        *r = *r - 1;
+        *d = 'N';
+    } else if (tile == 'L' && *d == 'W') {
+        *r = *r - 1;
+        *d = 'N';
+    } else if (tile == 'L' && *d == 'S') {
+        *c = *c + 1;
+        *d = 'E';
+    } else if (tile == 'F' && *d == 'W') {
+        *r = *r + 1;
+        *d = 'S';
+    } else if (tile == 'F' && *d == 'N') {
+        *c = *c + 1;
+        *d = 'E';
+    }
+
+
 
 }
