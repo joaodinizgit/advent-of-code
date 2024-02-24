@@ -39,36 +39,30 @@ int main(void)
     fclose(f);
     int row = 0;
     int col = 0;
-    int rorigin = 0;
-    int colorigin = 0;
+    int srow = 0; // Position of S
+    int scol = 0; // Position of S
     for (i = 0; i < nrows; i++) {
         for (j = 0; j < strlen(map[i]); j++) {
             if (map[i][j] == 'S') {
-                //printf("%c at map[%i][%i] \n" , map[i][j], i, j);
                 row = i;
                 col = j;
-                rorigin = i;
-                colorigin = j;
+                srow = i;
+                scol = j;
                 break;
             }
-        //printf("%c at map[%i][%i] \n" , map[i][j], i, j);
         }
     }
-    char dir[1];
+    char dir[1];    // Direction
     printf("%c at map[%i][%i] \n" , map[row][col], row, col); // Start point.
-    //rush(&row, &col, map);
     int counter = 0;
-    rush(&row, &col, map, dir); // To right
-    while (row != rorigin || col != colorigin) {
+    rush(&row, &col, map, dir);
+    while (row != srow || col != scol) {
         printf("map[%i][%i] %c \n", row, col, map[row][col]);
         rush(&row, &col, map, dir);
         counter++;
     }
-
-    printf("STEPS ARE %i\n", counter);
-    printf("STEPS ARE %i\n", counter/2 + 1);
-
-
+    printf("Steps are: %i\n", counter + 1);
+    printf("Answer Part 1. Steps are: %i\n", counter/2 + 1);
 }
 
 void rush(int *r, int *c, char *map[], char *d)
@@ -78,7 +72,7 @@ void rush(int *r, int *c, char *map[], char *d)
     //char tsouth = map[*r + 1][*c];
     //char twest  = map[*r][*c - 1];
     //char tnorth = map[*r - 1][*c];
-    printf("%c\n", *d);
+    //printf("%c\n", *d);
 
     // S will have exactly two connected pipes
     if (tile == 'S' && (map[*r - 1][*c] == '7' || map[*r - 1][*c] == '|' || map[*r - 1][*c] == 'F')) {
