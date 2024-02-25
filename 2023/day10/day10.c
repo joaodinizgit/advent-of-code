@@ -1,4 +1,4 @@
-/*  Advent of Code Day 10 Part 1
+/*  Advent of Code Day 10 Part 1 and 2.
     Author: João Diniz.
     joaodiniz@msn.com
 */
@@ -8,19 +8,18 @@
 
 enum {
     MAXCHAR = 1000,
-    MAXROWS = 140
+    MAXROWS = 200,
+    MAXPOINTS = 15000
 };
 
-// Define a point structure
 typedef struct point {
     int x, y;
 }point;
 
-int isInsidePolygon(point polygon[], int n, point p);
-
+int isinpolygon(point *polygon, int n, point p);
 void rush(int *r, int *c, char *map[], char *d);
+int isnotpp(point p, point *polygon, int limit);
 
-int isin(point p, point *polyg, int limit);
 
 int main(void)
 {
@@ -40,119 +39,116 @@ int main(void)
     while (fgets(line, MAXCHAR, f) != NULL) {
         char *p;
         p = strtok(line, "\n");
-        //printf("%i \n", strlen(p));
-        ncols = strlen(p);
         map[nrows] = malloc((strlen(p) + 1) * sizeof(char));
-
         strcpy(map[nrows], p);
         nrows++;
     }
-
-    //printf("%i", nrows);
+    ncols = strlen(map[0]);
 
     free(line);
     fclose(f);
+
     int row = 0;
     int col = 0;
-    int srow = 0; // Position of S
-    int scol = 0; // Position of S
+    point s = {};
     for (i = 0; i < nrows; i++) {
-        for (j = 0; j < strlen(map[i]); j++) {
+        for (j = 0; j < ncols; j++) {
             if (map[i][j] == 'S') {
                 row = i;
                 col = j;
-                srow = i;
-                scol = j;
+                s.x = i;
+                s.y = j;
+                i += nrows;
                 break;
             }
         }
     }
 
-    char dir[1];    // Direction
-
-    int k = 0;
-    printf("%c at map[%i][%i] \n" , map[row][col], row, col); // Start point.
-    int counter = 0;
-    //printf("{%i, %i}, ", row, col);
-    point polyg[13734] = {};
-    polyg[counter].x = row;
-    polyg[counter].y = col;
-    counter++;
-    rush(&row, &col, map, dir);
-    while (row != srow || col != scol) {
-        //printf("{%i,%i}, ", row, col);
-        // Store the points to use in Part 2.
-        polyg[counter].x = row;
-        polyg[counter].y = col;
-        //printf("map[%i][%i] %c \n", row, col, map[row][col]);
-        rush(&row, &col, map, dir);
-        //polyg[counter] = {rol, col};
-        counter++;
+    char mapvisual[nrows][ncols];
+    for (i = 0; i < nrows; i++) {
+        for (j = 0; j < ncols; j++) {
+            mapvisual[i][j] = 'O';
+        }
     }
-    printf("Steps are: %i\n", counter);
-    printf("Answer Part 1. Steps are: %i\n", counter/2);
 
-    /*for (i = 0; i < counter; i++) {
-        printf("{%i, %i}, ", polyg[i].x, polyg[i].y);
-    }*/
+    char dir[1];    // Direction
+    int npoints = 0;
 
+    point polygon[MAXPOINTS] = {};
+    polygon[npoints].x = row;
+    polygon[npoints].y = col;
+    mapvisual[row][col] = map[row][col];
+    rush(&row, &col, map, dir);
 
+    npoints++;
+    // Will flow through all points ultil return to S point.
+    while (row != s.x || col != s.y) {
+        polygon[npoints].x = row;
+        polygon[npoints].y = col;
+        mapvisual[row][col] = map[row][col];
+        rush(&row, &col, map, dir);
+        npoints++;
+    }
+    printf("Answer Part 1. Steps are: %i\n", npoints/2);
 
-    // PART 2
-
-    // Example: Define a polygon (loop).
-    //point polygon[] = {{1, 1}, {1, 2}, {1, 3}, {1, 4}, {1, 5}, {1, 6}, {1, 7}, {1, 8}, {1, 9}, {2, 9}, {3, 9}, {4, 9}, {5, 9}, {6, 9}, {7, 9}, {7, 8}, {7, 7}, {7, 6}, {6, 6}, {5, 6}, {5, 7}, {5, 8}, {4, 8}, {3, 8}, {2, 8}, {2, 7}, {2, 6}, {2,5}, {2,4}, {2,3}, {2,2}, {3,2}, {4,2}, {5,2}, {5,3}, {5,4}, {6,4}, {7,4}, {7,3}, {7,2}, {7,1}, {6,1}, {5,1}, {4,1}, {3,1}, {2,1}};
-
-    int n = sizeof(polyg) / sizeof(polyg[0]);
-    printf("%i\n", n);
-
-    int tinside = 0;
+    int ptsin = 0;
     for (i = 0; i < nrows; i++) {
         for (j = 0; j < ncols; j++) {
             point p = {i, j};
-            //isin(p);
-            // Check if the point is inside the polygon
-            if (!isin(p, polyg, counter) && (isInsidePolygon(polyg, n, p))) {
-                printf("Point (%i, %i) is inside the polygon.\n", p.x, p.y);
-                tinside++;
+            // Check if the point is inside the polygon.
+            if (isnotpp(p, polygon, npoints) && (isinpolygon(polygon, npoints, p))) {
+                mapvisual[p.x][p.y] = 'I';
+                ptsin++;
             }
         }
     }
-    printf("Total inside polygon is %i\n", tinside);
+    printf("Answer Part 2. Total points inside polygon: %i\n", ptsin);
+
+    // Extra: Print all the map.
+    for (i = 0; i < nrows; i++) {
+        for (j = 0; j < ncols; j++) {
+            printf("%c", mapvisual[i][j]);
+        }
+        printf("\n");
+    }
+
+    for (i = 0; i < nrows; i++) {
+        free(map[i]);
+    }
+    return 0;
 }
 
+
+// This function will find the next point and direction.
 void rush(int *r, int *c, char *map[], char *d)
 {
-    char tile   = map[*r][*c];
-    //char teast  = map[*r][*c + 1];
-    //char tsouth = map[*r + 1][*c];
-    //char twest  = map[*r][*c - 1];
-    //char tnorth = map[*r - 1][*c];
-    //printf("%c\n", *d);
+    char tile = map[*r][*c];
+    /*  r: row,
+        c: column,
+        d: direction
+    */
 
-    // S will have exactly two connected pipes
-    if (tile == 'S' && (map[*r - 1][*c] == '7' || map[*r - 1][*c] == '|' || map[*r - 1][*c] == 'F')) {
-        printf("Start at NORTH\n");
+    // S will have exactly two connected pipes.
+    if (tile == 'S' && ((*r - 1) >= 0) && (map[*r - 1][*c] == '7' || map[*r - 1][*c] == '|' || map[*r - 1][*c] == 'F')) {
+        // Start to North direction.
         *r = *r - 1;
         *d = 'N';
-    } else if (tile == 'S' && (map[*r][*c + 1] == '-' || map[*r][*c + 1] == '7' || map[*r][*c + 1] == 'J')) {
-        printf("Start at EAST\n");
+    } else if (tile == 'S' && ((*c + 1) <= strlen(map[0])) && (map[*r][*c + 1] == '-' || map[*r][*c + 1] == '7' || map[*r][*c + 1] == 'J')) {
+        // Start to East direction.
         *c = *c + 1;
         *d = 'E';
+    } else if (tile == 'S' && ((*c - 1) >= 0) && (map[*r][*c - 1] == '-' || map[*r][*c - 1] == 'L' || map[*r][*c - 1] == 'F')) {
+        // Start to West in direction.
+        *c = *c - 1;
+        *d = 'W';
     } else if (tile == 'S' && (map[*r + 1][*c] == '|' || map[*r + 1][*c] == 'J' || map[*r + 1][*c] == 'L')) {
-        printf("Start at SOUTH\n");
+        // Start to South direction.
         *r = *r + 1;
         *d = 'S';
-    } else if (tile == 'S' && (map[*r][*c - 1] == '-' || map[*r][*c - 1] == 'L' || map[*r][*c - 1] == 'F')) {
-        printf("Start at WEST\n");
-        *c = *c - 1;
-        *d = 'W';
     } else if (tile == '-' && *d == 'E') {
         *c = *c + 1;
-        *d = 'E';
     } else if (tile == '-' && *d == 'W') {
         *c = *c - 1;
-        *d = 'W';
     } else if (tile == '7' && *d == 'E') {
         *r = *r + 1;
         *d = 'S';
@@ -161,10 +157,8 @@ void rush(int *r, int *c, char *map[], char *d)
         *d = 'W';
     } else if (tile == '|' && *d == 'S') {
         *r = *r + 1;
-        *d = 'S';
     } else if (tile == '|' && *d == 'N') {
         *r = *r - 1;
-        *d = 'N';
     } else if (tile == 'J' && *d == 'S') {
         *c = *c - 1;
         *d = 'W';
@@ -184,14 +178,11 @@ void rush(int *r, int *c, char *map[], char *d)
         *c = *c + 1;
         *d = 'E';
     }
-
-
-
 }
 
 
-// Check if a point is inside a polygon
-int isInsidePolygon(point polygon[], int n, point p) {
+// Check if a point is inside a polygon.
+int isinpolygon(point *polygon, int n, point p) {
     int i, j, c = 0;
     for (i = 0, j = n - 1; i < n; j = i++) {
         if (((polygon[i].y > p.y) != (polygon[j].y > p.y)) &&
@@ -201,13 +192,19 @@ int isInsidePolygon(point polygon[], int n, point p) {
     return c;
 }
 
-int isin(point p, point *polyg, int limit)
+// Check if the point is not a polygonal point.
+int isnotpp(point p, point *polygon, int limit)
 {
     int i;
     for (i = 0; i < limit; i++) {
-        if ((p.x == polyg[i].x) && (p.y == polyg[i].y)) {
-            return 1;
+        if ((p.x == polygon[i].x) && (p.y == polygon[i].y)) {
+            return 0;
         }
     }
-    return 0;
+    return 1;
 }
+
+/*  Answers for "input.txt":
+    Part 1: 6867
+    Part 2: 595
+*/
