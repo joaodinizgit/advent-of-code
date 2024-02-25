@@ -12,4 +12,4 @@
 - [X] [[file:2023/day7/day7.c][Day 7 Part 1 and 2 in C Programming Language.]]
 - [X] [[file:2023/day8/day8.c][Day 8 Part 1 and 2 in C Programming Language.]]
 - [X] [[file:2023/day9/day9.c][Day 9 Part 1 and 2 in C Programming Language.]]
-
+- [X] [[file:2023/day10/day10.c][Day 10 Part 1 and 2 in C Programming Language.]]
