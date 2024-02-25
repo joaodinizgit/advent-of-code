@@ -138,7 +138,7 @@ void rush(int *r, int *c, char *map[], char *d)
         *c = *c + 1;
         *d = 'E';
     } else if (tile == 'S' && ((*c - 1) >= 0) && (map[*r][*c - 1] == '-' || map[*r][*c - 1] == 'L' || map[*r][*c - 1] == 'F')) {
-        // Start to West in direction.
+        // Start to West direction.
         *c = *c - 1;
         *d = 'W';
     } else if (tile == 'S' && (map[*r + 1][*c] == '|' || map[*r + 1][*c] == 'J' || map[*r + 1][*c] == 'L')) {
