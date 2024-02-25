@@ -89,7 +89,7 @@ int main(void)
         rush(&row, &col, map, dir);
         npoints++;
     }
-    printf("Answer Part 1. Steps are: %i\n", npoints/2);
+    printf("Answer Part 1. Farthest point: %i\n", npoints/2);
 
     int ptsin = 0;
     for (i = 0; i < nrows; i++) {
