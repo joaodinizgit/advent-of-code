@@ -18,7 +18,7 @@ typedef struct point {
 
 int isinpolygon(point *polygon, int n, point p);
 void rush(int *r, int *c, char *map[], char *d);
-int isnotpp(point p, point *polygon, int limit);
+int notpp(point p, point *polygon, int limit);
 
 
 int main(void)
@@ -81,7 +81,6 @@ int main(void)
     rush(&row, &col, map, dir);
 
     npoints++;
-    // Will flow through all points ultil return to S point.
     while (row != s.x || col != s.y) {
         polygon[npoints].x = row;
         polygon[npoints].y = col;
@@ -95,8 +94,7 @@ int main(void)
     for (i = 0; i < nrows; i++) {
         for (j = 0; j < ncols; j++) {
             point p = {i, j};
-            // Check if the point is inside the polygon.
-            if (isnotpp(p, polygon, npoints) && (isinpolygon(polygon, npoints, p))) {
+            if (notpp(p, polygon, npoints) && (isinpolygon(polygon, npoints, p))) {
                 mapvisual[p.x][p.y] = 'I';
                 ptsin++;
             }
@@ -128,55 +126,64 @@ void rush(int *r, int *c, char *map[], char *d)
         d: direction
     */
 
-    // S will have exactly two connected pipes.
-    if (tile == 'S' && ((*r - 1) >= 0) && (map[*r - 1][*c] == '7' || map[*r - 1][*c] == '|' || map[*r - 1][*c] == 'F')) {
-        // Start to North direction.
-        *r = *r - 1;
-        *d = 'N';
-    } else if (tile == 'S' && ((*c + 1) <= strlen(map[0])) && (map[*r][*c + 1] == '-' || map[*r][*c + 1] == '7' || map[*r][*c + 1] == 'J')) {
-        // Start to East direction.
-        *c = *c + 1;
-        *d = 'E';
-    } else if (tile == 'S' && ((*c - 1) >= 0) && (map[*r][*c - 1] == '-' || map[*r][*c - 1] == 'L' || map[*r][*c - 1] == 'F')) {
-        // Start to West direction.
-        *c = *c - 1;
-        *d = 'W';
-    } else if (tile == 'S' && (map[*r + 1][*c] == '|' || map[*r + 1][*c] == 'J' || map[*r + 1][*c] == 'L')) {
-        // Start to South direction.
-        *r = *r + 1;
-        *d = 'S';
-    } else if (tile == '-' && *d == 'E') {
-        *c = *c + 1;
-    } else if (tile == '-' && *d == 'W') {
-        *c = *c - 1;
-    } else if (tile == '7' && *d == 'E') {
-        *r = *r + 1;
-        *d = 'S';
-    } else if (tile == '7' && *d == 'N') {
-        *c = *c - 1;
-        *d = 'W';
-    } else if (tile == '|' && *d == 'S') {
-        *r = *r + 1;
-    } else if (tile == '|' && *d == 'N') {
-        *r = *r - 1;
-    } else if (tile == 'J' && *d == 'S') {
-        *c = *c - 1;
-        *d = 'W';
-    } else if (tile == 'J' && *d == 'E') {
-        *r = *r - 1;
-        *d = 'N';
-    } else if (tile == 'L' && *d == 'W') {
-        *r = *r - 1;
-        *d = 'N';
-    } else if (tile == 'L' && *d == 'S') {
-        *c = *c + 1;
-        *d = 'E';
-    } else if (tile == 'F' && *d == 'W') {
-        *r = *r + 1;
-        *d = 'S';
-    } else if (tile == 'F' && *d == 'N') {
-        *c = *c + 1;
-        *d = 'E';
+    if (tile == 'S') {
+        if ((*r - 1) >= 0 && (map[*r - 1][*c] == '7' || map[*r - 1][*c] == '|' || map[*r - 1][*c] == 'F')) {
+            *r = *r - 1;
+            *d = 'N';
+        } else if (((*c + 1) <= strlen(map[0])) && (map[*r][*c + 1] == '-' || map[*r][*c + 1] == '7' || map[*r][*c + 1] == 'J')) {
+            *c = *c + 1;
+            *d = 'E';
+        } else if (((*c - 1) >= 0) && (map[*r][*c - 1] == '-' || map[*r][*c - 1] == 'L' || map[*r][*c - 1] == 'F')) {
+            *c = *c - 1;
+            *d = 'W';
+        } else if ((map[*r + 1][*c] == '|' || map[*r + 1][*c] == 'J' || map[*r + 1][*c] == 'L')) {
+            *r = *r + 1;
+            *d = 'S';
+        }
+    } else if (tile == '-') {
+        if (*d == 'E') {
+            *c = *c + 1;
+        } else if (*d == 'W') {
+            *c = *c - 1;
+        }
+    } else if (tile == '7') {
+        if (*d == 'E') {
+            *r = *r + 1;
+            *d = 'S';
+        } else if (*d == 'N') {
+            *c = *c - 1;
+            *d = 'W';
+        }
+    } else if (tile == '|') {
+        if (*d == 'S') {
+            *r = *r + 1;
+        } else if (*d == 'N') {
+            *r = *r - 1;
+        }
+    } else if (tile == 'J') {
+        if (*d == 'S') {
+            *c = *c - 1;
+            *d = 'W';
+        } else if (*d == 'E') {
+            *r = *r - 1;
+            *d = 'N';
+        }
+    } else if (tile == 'L') {
+        if (*d == 'W') {
+            *r = *r - 1;
+            *d = 'N';
+        } else if (*d == 'S') {
+            *c = *c + 1;
+            *d = 'E';
+        }
+    } else if (tile == 'F') {
+        if (*d == 'W') {
+            *r = *r + 1;
+            *d = 'S';
+        } else if (*d == 'N') {
+            *c = *c + 1;
+            *d = 'E';
+        }
     }
 }
 
@@ -193,7 +200,7 @@ int isinpolygon(point *polygon, int n, point p) {
 }
 
 // Check if the point is not a polygonal point.
-int isnotpp(point p, point *polygon, int limit)
+int notpp(point p, point *polygon, int limit)
 {
     int i;
     for (i = 0; i < limit; i++) {
