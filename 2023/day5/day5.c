@@ -16,19 +16,25 @@ enum {
     MAXCOL      = 3,
     MAXSEEDS    = 20,
     SIZENUMBER  = 20,
-    MAXSAMPLES  = 20000
+    MAXSAMPLES  = 20000,
+    MAXMAPS     = 7
 };
 
-void fvalues(char ln[100]);
-void ftitle(char line[100]);
-void low_loc_nums(unsigned int seed, int i, unsigned int *ptr[2]);
-void lower_number(unsigned int *arr[2], int limit, unsigned int *lowest_pair[2]);
+struct pair{
+    unsigned int *seedn;
+    unsigned int *locn;
+} pair;
+
+void fvalues(char ln[]);
+void ftitle(char line[]);
+void fnd_locs(unsigned int seed, unsigned int index, struct pair *lns);
+void fnd_lowest_loc(struct pair *arr, int limit, struct pair *ln);
 
 char title[20];
 unsigned int temporary[20];
 
 unsigned int seeds[MAXSEEDS];
-unsigned int maps[7][MAXROWS][MAXCOL];
+unsigned int maps[MAXMAPS][MAXROWS][MAXCOL];
 unsigned int low_numbers[MAXSEEDS];
 
 int main(void)
@@ -37,8 +43,11 @@ int main(void)
     char line[MAXCHAR];
     int i, j, k, m, status;
 
-    FILE *f;
-    f = fopen("input.txt", "r");
+    FILE *f = fopen("input.txt", "r");
+    if (f == NULL) {
+        printf("File not found\n");
+        return 1;
+    }
 
     m = 0;
     k = 0;
@@ -72,26 +81,28 @@ int main(void)
         }
     }
     fclose(f);
-    unsigned int *low_numb[2];
-    low_numb[0] = (unsigned int *)malloc(20 * sizeof(unsigned int));
-    low_numb[1] = (unsigned int *)malloc(20 * sizeof(unsigned int));
+
+    struct pair lower_ns;
+    lower_ns.seedn = malloc(MAXSEEDS * sizeof(unsigned int));
+    lower_ns.locn = malloc(MAXSEEDS * sizeof(unsigned int));
 
     for (i = 0; i < MAXSEEDS; ++i) {
-        low_loc_nums(seeds[i], i, low_numb);
+        fnd_locs(seeds[i], i, &lower_ns);
     }
 
-    unsigned int *low_n[2];
-    low_n[0] = (unsigned int *)malloc(sizeof(unsigned int));
-    low_n[1] = (unsigned int *)malloc(sizeof(unsigned int));
+    struct pair lower_n;
+    lower_n.seedn = malloc(sizeof(unsigned int));
+    lower_n.locn = malloc(sizeof(unsigned int));
 
-    lower_number(low_numb, MAXSEEDS, low_n);
+    fnd_lowest_loc(&lower_ns, MAXSEEDS, &lower_n);
+
     printf("Part 1: \n");
-    printf("Lower Number is: %lu\n", *low_n[0]);
+    printf("Lower Number is: %lu\n", *lower_n.locn);
 
-    free(low_numb[0]);
-    free(low_numb[1]);
-    free(low_n[0]);
-    free(low_n[1]);
+    free(lower_ns.seedn);
+    free(lower_ns.locn);
+    free(lower_n.seedn);
+    free(lower_n.locn);
 
     unsigned int ranges[10][2];
     j = 0;
@@ -102,13 +113,15 @@ int main(void)
         ++j;
     }
 
-    unsigned int *nums[2];
-    unsigned int iter;
-    unsigned int *ten_lowers[2];
-    unsigned int *lowest_pair[2];
+    //return 0;
 
-    ten_lowers[0] = (unsigned int *)malloc(10 * sizeof(unsigned int));
-    ten_lowers[1] = (unsigned int *)malloc(10 * sizeof(unsigned int));
+    struct pair nums;
+    struct pair ten_lowers;
+    struct pair lowest_pair;
+    unsigned int iter;
+
+    ten_lowers.seedn = malloc(10 * sizeof(unsigned int));
+    ten_lowers.locn = malloc(10 * sizeof(unsigned int));
 
     for (i = 0; i < 10; ++i) {
         j = 0;
@@ -116,82 +129,78 @@ int main(void)
             ++j;
         }
 
-        /* nums[0] are the numbers that will be tested and
-        nums[1] are the equivalent seed. */
-        nums[0] = (unsigned int *)malloc(j * sizeof(unsigned int));
-        nums[1] = (unsigned int *)malloc(j * sizeof(unsigned int));
+        nums.seedn = malloc(j * sizeof(unsigned int));
+        nums.locn = malloc(j * sizeof(unsigned int));
 
         j = 0;
         for (iter = ranges[i][0]; iter <= ranges[i][1]; iter += MAXSAMPLES) {
-            low_loc_nums(iter, j, nums);
+            fnd_locs(iter, j, &nums);
             ++j;
         }
 
-        /* lowest_pair[0] store the lowest location and
-        lowest_pair[1], the equivalent seed. */
-        lowest_pair[0] = (unsigned int *)malloc(sizeof(unsigned int));
-        lowest_pair[1] = (unsigned int *)malloc(sizeof(unsigned int));
+        lowest_pair.seedn = malloc(sizeof(unsigned int));
+        lowest_pair.locn = malloc(sizeof(unsigned int));
 
-        lower_number(nums, j, lowest_pair);
+        fnd_lowest_loc(&nums, j, &lowest_pair);
 
-        *(ten_lowers[0] + i) = *lowest_pair[0];
-        *(ten_lowers[1] + i) = *lowest_pair[1];
+        *(ten_lowers.seedn + i) = *lowest_pair.seedn;
+        *(ten_lowers.locn + i) = *lowest_pair.locn;
 
-        free(lowest_pair[0]);
-        free(lowest_pair[1]);
-        free(nums[0]);
-        free(nums[1]);
+        free(lowest_pair.seedn);
+        free(lowest_pair.locn);
+        free(nums.seedn);
+        free(nums.locn);
     }
 
     printf("Part 2: \n");
     printf("Ten Lowest Pairs: \n");
     printf("Lower Location  \t Seed \n");
     for (i = 0; i < 10; ++i) {
-        printf("%lu \t\t %lu\n", *(ten_lowers[0] + i), *(ten_lowers[1] + i));
+        printf("%lu \t\t %lu\n", *(ten_lowers.locn + i), *(ten_lowers.seedn + i));
     }
 
-    /* lowest_pair[0] store the lowest location and
-    lowest_pair[1], the equivalent seed. */
-    lowest_pair[0] = (unsigned int *)malloc(2* sizeof(unsigned int));
-    lowest_pair[1] = (unsigned int *)malloc(2* sizeof(unsigned int));
+    lowest_pair.seedn = malloc(2* sizeof(unsigned int));
+    lowest_pair.locn = malloc(2* sizeof(unsigned int));
 
-    lower_number(ten_lowers, 10, lowest_pair);
-    printf("The approximated lower number is: %lu, with seed: %lu \n", *lowest_pair[0], *lowest_pair[1]);
+    fnd_lowest_loc(&ten_lowers, 10, &lowest_pair);
+    printf("The approximated lower number is: %lu, with seed: %lu \n", *lowest_pair.locn, *lowest_pair.seedn);
 
     unsigned int start_range;
     for (i = 0; i < 10; ++i) {
-        if (ten_lowers[0][i] == *lowest_pair[0]) {
+        if (*(ten_lowers.locn + i) == *lowest_pair.locn) {
             printf("The number is in Range: index(%i) %lu %lu\n", i, ranges[i][0], ranges[i][1]);
             start_range = ranges[i][0];
             break;
         }
     }
 
+
     // Find the new lowest number with it's equivalent seed.
     unsigned int new_limit;
-    new_limit = *lowest_pair[1] - start_range;
-    unsigned int h;
-    h = 0;
+    new_limit = *lowest_pair.seedn - start_range;
+    unsigned int h = 0;
 
-    nums[0] = (unsigned int *)malloc(1000 * sizeof(unsigned int));
-    nums[1] = (unsigned int *)malloc(1000 * sizeof(unsigned int));
+    nums.seedn = malloc(10000 * sizeof(unsigned int));
+    nums.locn = malloc(10000 * sizeof(unsigned int));
 
-    for (iter = *lowest_pair[1]; iter > start_range; --iter) {
-        low_loc_nums(iter, h, nums);
+    for (iter = *lowest_pair.seedn; iter > start_range; iter--) {
+        fnd_locs(iter, h, &nums);
 
-        if (*(nums[0] + h) > *lowest_pair[0]) {
-            printf("The lower Location numbers is: %lu \n",*(nums[0] + h - 1));
+        if (*(nums.seedn + h) > *lowest_pair.seedn) {
+            printf("The lower Location numbers is: %lu \n",*(nums.seedn + h - 1));
             break;
         }
-        ++h;
+        h++;
     }
-
+    printf("TTThe lower Location numbers is: %lu \n",*(nums.locn + h - 1));
+    /*
     free(lowest_pair[0]);
     free(lowest_pair[1]);
     free(nums[0]);
     free(nums[1]);
     free(ten_lowers[0]);
     free(ten_lowers[1]);
+    */
 }
 
 
@@ -215,16 +224,16 @@ void ftitle(char line[])
 }
 
 // Find file's values numbers.
-void fvalues(char ln[])
+void fvalues(char line[])
 {
     char buffer[15];
     int i, j, k, status;
     j = k = 0;
     status = OUT;
-    for (i = 0; i < strlen(ln); ++i) {
-        if (ln[i] != '\n') {
-            if (isdigit(ln[i])) {
-                buffer[j] = ln[i];
+    for (i = 0; i < strlen(line); ++i) {
+        if (line[i] != '\n') {
+            if (isdigit(line[i])) {
+                buffer[j] = line[i];
                 status = IN;
                 ++j;
             } else if (status == IN){
@@ -237,7 +246,7 @@ void fvalues(char ln[])
         }
     }
     if (status == IN) {
-        buffer[j] = ln[i];
+        buffer[j] = line[i];
         temporary[k] = atol(buffer);
         j = 0;
         k = 0;
@@ -245,41 +254,43 @@ void fvalues(char ln[])
 }
 
 
-void low_loc_nums(unsigned int seed, int index, unsigned int *ptr[2])
+// Find locations numbers.
+void fnd_locs(unsigned int seed, unsigned int index, struct pair *lns)
 {
-    int map, line, j;
-    unsigned int seed_before;
-    seed_before = seed;
-    for (map = 0; map < 7; ++map){
-        line = 0;
-        while (maps[map][line][0] != SENTINEL) {
-            if (seed >= maps[map][line][1] && seed < maps[map][line][1] + maps[map][line][2]) {
-                seed = seed - maps[map][line][1] + maps[map][line][0];
+    int map, row;
+    unsigned int seedsrc;
+    seedsrc = seed;
+    for (map = 0; map < MAXMAPS; map++){
+        row = 0;
+        while (maps[map][row][0] != SENTINEL) {
+            if (seed >= maps[map][row][1] && seed < maps[map][row][1] + maps[map][row][2]) {
+                seed = seed - maps[map][row][1] + maps[map][row][0];
                 break;
             }
-            ++line;
+            ++row;
         }
     }
-    *(ptr[0] + index) = seed;
-    *(ptr[1] + index) = seed_before;
+    *(lns->seedn + index) = seedsrc;
+    *(lns->locn + index) = seed;
 }
 
 
-void lower_number(unsigned int *arr[2], int limit, unsigned int *lowest_pair[2])
+// Find lowest location number.
+void fnd_lowest_loc(struct pair *arr, int limit, struct pair *ln)
 {
     unsigned int lower, j, seed;
     lower = 4294967295;
     for (j = 0; j < limit; ++j) {
-        if (*arr[0] <= *(arr[0] + j) && *(arr[0]) < lower) {
-            lower = *arr[0];
-            seed = *arr[1];
-        } else if (*(arr[0] + j) < lower) {
-            lower = *(arr[0] + j);
-            seed = *(arr[1] + j);
+        if (*arr->locn <= *(arr->locn + j) && *(arr->locn) < lower) {
+            lower = *arr->locn;
+            seed = *arr->locn;
+        } else if (*(arr->locn + j) < lower) {
+            lower = *(arr->locn + j);
+            seed = *(arr->seedn + j);
         }
     }
-    *lowest_pair[0] = lower;
-    *lowest_pair[1] = seed;
+    *ln->seedn = seed;
+    *ln->locn = lower;
 }
 
 /*  The answers from the input.txt file are:
