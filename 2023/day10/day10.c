@@ -17,7 +17,7 @@ typedef struct point {
 }point;
 
 int isinpolygon(point *polygon, int n, point p);
-void rush(int *r, int *c, char *map[], char *d);
+void nextpd(int *r, int *c, char *map[], char *d);
 int notpp(point p, point *polygon, int limit);
 
 
@@ -78,14 +78,14 @@ int main(void)
     polygon[npoints].x = row;
     polygon[npoints].y = col;
     mapvisual[row][col] = map[row][col];
-    rush(&row, &col, map, dir);
+    nextpd(&row, &col, map, dir);
 
     npoints++;
     while (row != s.x || col != s.y) {
         polygon[npoints].x = row;
         polygon[npoints].y = col;
         mapvisual[row][col] = map[row][col];
-        rush(&row, &col, map, dir);
+        nextpd(&row, &col, map, dir);
         npoints++;
     }
     printf("Answer Part 1. Farthest point: %i\n", npoints/2);
@@ -117,8 +117,8 @@ int main(void)
 }
 
 
-// This function will find the next point and direction.
-void rush(int *r, int *c, char *map[], char *d)
+// Find the next point and direction.
+void nextpd(int *r, int *c, char *map[], char *d)
 {
     char tile = map[*r][*c];
     /*  r: row,
