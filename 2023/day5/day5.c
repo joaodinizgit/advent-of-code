@@ -175,32 +175,29 @@ int main(void)
     }
 
 
-    // Find the new lowest number with it's equivalent seed.
-    unsigned int new_limit;
-    new_limit = *lowest_pair.seedn - start_range;
+    // Find the new lowest locations numbers.
     unsigned int h = 0;
 
-    nums.seedn = malloc(10000 * sizeof(unsigned int));
-    nums.locn = malloc(10000 * sizeof(unsigned int));
+    nums.seedn = malloc(1000 * sizeof(unsigned int));
+    nums.locn = malloc(1000 * sizeof(unsigned int));
 
     for (iter = *lowest_pair.seedn; iter > start_range; iter--) {
         fnd_locs(iter, h, &nums);
 
-        if (*(nums.seedn + h) > *lowest_pair.seedn) {
-            printf("The lower Location numbers is: %lu \n",*(nums.seedn + h - 1));
+        if (*(nums.locn + h) > *lowest_pair.locn) {
+            printf("The lower Location numbers is: %lu \n",*(nums.locn + h - 1));
             break;
         }
         h++;
     }
-    printf("TTThe lower Location numbers is: %lu \n",*(nums.locn + h - 1));
-    /*
-    free(lowest_pair[0]);
-    free(lowest_pair[1]);
-    free(nums[0]);
-    free(nums[1]);
-    free(ten_lowers[0]);
-    free(ten_lowers[1]);
-    */
+
+    free(lowest_pair.seedn);
+    free(lowest_pair.locn);
+    free(nums.seedn);
+    free(nums.locn);
+    free(ten_lowers.locn);
+    free(ten_lowers.seedn);
+
 }
 
 
