@@ -10,8 +10,6 @@
 enum {
     MAXCHAR     = 300,
     SENTINEL    = -1,
-    IN          = 1,
-    OUT         = 0,
     MAXMAPS     = 7,
     MAXROWS     = 50,
     MAXCOLS     = 3,
@@ -24,60 +22,51 @@ struct pair{
     unsigned int *locn;
 } pair;
 
-void fvalues(char ln[]);
-void ftitle(char line[]);
 void fnd_locs(unsigned int seed, unsigned int i, struct pair *lns);
 void fnd_lowest_loc(struct pair *arr, int limit, struct pair *ln);
 
-char title[20];
-unsigned int tmp[20];
 unsigned int seeds[MAXSEEDS];
 unsigned int maps[MAXMAPS][MAXROWS][MAXCOLS];
 
 
 int main(void)
 {
-    char c;
-    char line[MAXCHAR] = {};
-    int i, j, k, m, status;
-
     FILE *f = fopen("input.txt", "r");
     if (f == NULL) {
         printf("File not found\n");
         return 1;
     }
 
-    m = 0;
-    k = 0;
-    status = OUT;
+    char line[MAXCHAR] = {};
+    int i, j, m = -1, r = 0;
 
     while (fgets(line, MAXCHAR, f)) {
-        if (isalnum(*line)) {
-            ftitle(line);
+        if (*line == '\n' || *line == ' ' || *line == '\t') {
+            m++;
+            r = 0;
+            continue;
+        }
 
-            if (strcmp(title, "seeds") == 0) {
-                fvalues(line);
-                for (i = 0; i < MAXSEEDS; i++) {
-                    seeds[i] = tmp[i];
-                }
-            } else if (isdigit(*line)) {
-                status = IN;
-                fvalues(line);
-                for (i = 0; i < MAXCOLS; i++) {
-                    maps[m][k][i] = tmp[i];
-                }
-                maps[m][k+1][0] = SENTINEL;
-                ++k;
-                }
-
-        } else if (isblank(*line) || *line == '\n') {
-            if (status == IN) {
-                m++;
-                k = 0;
-                status = OUT;
+        char *p;
+        p = strtok(line, "\n");
+        p = strtok(line, " ");
+        i = 0;
+        if (isdigit(*line)) {
+            while (p != NULL) {
+                maps[m][r][i++] = atol(p);
+                p = strtok(NULL, " ");
+            }
+            maps[m][r+1][0] = SENTINEL;
+            r++;
+        }else if (strcmp(p, "seeds:") == 0) {
+            p = strtok(NULL, " ");
+            while (p != NULL) {
+                seeds[i++] = atol(p);
+                p = strtok(NULL, " ");
             }
         }
     }
+
     fclose(f);
 
     struct pair lower_ns;
@@ -186,56 +175,6 @@ int main(void)
     free(ten_lowers.locn);
     free(ten_lowers.seedn);
     return 0;
-}
-
-
-// Find title of values in file.
-void ftitle(char line[])
-{
-    int i, j, status;
-    j = 0;
-    status = OUT;
-    for (i = 0; i < strlen(line); i++) {
-        if (isalpha(line[i])) {
-            status = IN;
-            title[j] = line[i];
-            j++;
-        } else if (status == IN && line[i] == ' ') {
-            title[j] = '\0';
-            return;
-        }
-    }
-    return;
-}
-
-// Find file's values numbers.
-void fvalues(char line[])
-{
-    char buffer[15];
-    int i, j, k, status;
-    j = k = 0;
-    status = OUT;
-    for (i = 0; i < strlen(line); i++) {
-        if (line[i] != '\n') {
-            if (isdigit(line[i])) {
-                buffer[j] = line[i];
-                status = IN;
-                j++;
-            } else if (status == IN){
-                buffer[j] = '\0';
-                j = 0;
-                tmp[k] = atol(buffer);
-                k++;
-                status = OUT;
-            }
-        }
-    }
-    if (status == IN) {
-        buffer[j] = line[i];
-        tmp[k] = atol(buffer);
-        j = 0;
-        k = 0;
-    }
 }
 
 
