@@ -14,7 +14,7 @@ enum {
     OUT         = 0,
     MAXMAPS     = 7,
     MAXROWS     = 50,
-    MAXCOLS      = 3,
+    MAXCOLS     = 3,
     MAXSEEDS    = 20,
     MAXSAMPLES  = 20000
 };
@@ -33,7 +33,6 @@ char title[20];
 unsigned int tmp[20];
 unsigned int seeds[MAXSEEDS];
 unsigned int maps[MAXMAPS][MAXROWS][MAXCOLS];
-unsigned int low_numbers[MAXSEEDS];
 
 
 int main(void)
