@@ -58,7 +58,7 @@ int main(void)
             }
             maps[m][r+1][0] = SENTINEL;
             r++;
-        }else if (strcmp(p, "seeds:") == 0) {
+        } else if (strcmp(p, "seeds:") == 0) {
             p = strtok(NULL, " ");
             while (p != NULL) {
                 seeds[i++] = atol(p);
@@ -181,17 +181,17 @@ int main(void)
 // Find the locations numbers.
 void fnd_locs(unsigned int seed, unsigned int i, struct pair *lns)
 {
-    int map, row;
+    int m, r;
     unsigned int seedsrc;
     seedsrc = seed;
-    for (map = 0; map < MAXMAPS; map++){
-        row = 0;
-        while (maps[map][row][0] != SENTINEL) {
-            if (seed >= maps[map][row][1] && seed < maps[map][row][1] + maps[map][row][2]) {
-                seed = seed - maps[map][row][1] + maps[map][row][0];
+    for (m = 0; m < MAXMAPS; m++){
+        r = 0;
+        while (maps[m][r][0] != SENTINEL) {
+            if (seed >= maps[m][r][1] && seed < maps[m][r][1] + maps[m][r][2]) {
+                seed = seed - maps[m][r][1] + maps[m][r][0];
                 break;
             }
-            row++;
+            r++;
         }
     }
     *(lns->seedn + i) = seedsrc;
