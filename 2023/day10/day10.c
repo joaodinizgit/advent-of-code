@@ -128,60 +128,60 @@ void nextpd(int *r, int *c, char *map[], char *d)
 
     if (tile == 'S') {
         if ((*r - 1) >= 0 && (map[*r - 1][*c] == '7' || map[*r - 1][*c] == '|' || map[*r - 1][*c] == 'F')) {
-            *r = *r - 1;
+            --*r;
             *d = 'N';
         } else if (((*c + 1) <= strlen(map[0])) && (map[*r][*c + 1] == '-' || map[*r][*c + 1] == '7' || map[*r][*c + 1] == 'J')) {
-            *c = *c + 1;
+            ++*c;
             *d = 'E';
         } else if (((*c - 1) >= 0) && (map[*r][*c - 1] == '-' || map[*r][*c - 1] == 'L' || map[*r][*c - 1] == 'F')) {
-            *c = *c - 1;
+            --*c;
             *d = 'W';
         } else if ((map[*r + 1][*c] == '|' || map[*r + 1][*c] == 'J' || map[*r + 1][*c] == 'L')) {
-            *r = *r + 1;
+            ++*r;
             *d = 'S';
         }
     } else if (tile == '-') {
         if (*d == 'E') {
-            *c = *c + 1;
+            ++*c;
         } else if (*d == 'W') {
-            *c = *c - 1;
+            --*c;
         }
     } else if (tile == '7') {
         if (*d == 'E') {
-            *r = *r + 1;
+            ++*r;
             *d = 'S';
         } else if (*d == 'N') {
-            *c = *c - 1;
+            --*c;
             *d = 'W';
         }
     } else if (tile == '|') {
         if (*d == 'S') {
-            *r = *r + 1;
+            ++*r;
         } else if (*d == 'N') {
-            *r = *r - 1;
+            --*r;
         }
     } else if (tile == 'J') {
         if (*d == 'S') {
-            *c = *c - 1;
+            --*c;
             *d = 'W';
         } else if (*d == 'E') {
-            *r = *r - 1;
+            --*r;
             *d = 'N';
         }
     } else if (tile == 'L') {
         if (*d == 'W') {
-            *r = *r - 1;
+            --*r;
             *d = 'N';
         } else if (*d == 'S') {
-            *c = *c + 1;
+            ++*c;
             *d = 'E';
         }
     } else if (tile == 'F') {
         if (*d == 'W') {
-            *r = *r + 1;
+            ++*r;
             *d = 'S';
         } else if (*d == 'N') {
-            *c = *c + 1;
+            ++*c;
             *d = 'E';
         }
     }
