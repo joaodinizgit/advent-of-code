@@ -40,30 +40,25 @@ int main(void)
         char *p;
         p = strtok(line, "\n");
         map[nrows] = malloc((strlen(p) + 1) * sizeof(char));
-        strcpy(map[nrows], p);
-        nrows++;
+        strcpy(map[nrows++], p);
     }
     ncols = strlen(map[0]);
 
     free(line);
     fclose(f);
 
-    int row = 0;
-    int col = 0;
-    point s = {};
+    int row, col;
     for (i = 0; i < nrows; i++) {
         for (j = 0; j < ncols; j++) {
             if (map[i][j] == 'S') {
                 row = i;
                 col = j;
-                s.x = i;
-                s.y = j;
                 i += nrows;
                 break;
             }
         }
     }
-
+    point s = {row, col};
     char mapvisual[nrows][ncols];
     for (i = 0; i < nrows; i++) {
         for (j = 0; j < ncols; j++) {
@@ -79,8 +74,8 @@ int main(void)
     polygon[npoints].y = col;
     mapvisual[row][col] = map[row][col];
     nextpd(&row, &col, map, dir);
-
     npoints++;
+
     while (row != s.x || col != s.y) {
         polygon[npoints].x = row;
         polygon[npoints].y = col;
@@ -121,11 +116,7 @@ int main(void)
 void nextpd(int *r, int *c, char *map[], char *d)
 {
     char tile = map[*r][*c];
-    /*  r: row,
-        c: column,
-        d: direction
-    */
-
+    //  r: row, c: column, d: direction.
     if (tile == 'S') {
         if ((*r - 1) >= 0 && (map[*r - 1][*c] == '7' || map[*r - 1][*c] == '|' || map[*r - 1][*c] == 'F')) {
             --*r;
@@ -211,7 +202,4 @@ int notpp(point p, point *polygon, int limit)
     return 1;
 }
 
-/*  Answers for "input.txt":
-    Part 1: 6867
-    Part 2: 595
-*/
+// Answers for "input.txt": Part 1: 6867. Part 2: 595
