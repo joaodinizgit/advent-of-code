@@ -86,6 +86,7 @@ void type(char *h)
     }
 
     // Start - Included to Part 2.
+    // Remove if want to test only Part 1.
     // Check if there are "J"s:
     if (lc[3] > 0) {
         int hi_card = 0;
@@ -109,32 +110,25 @@ void type(char *h)
 
     if (in(5, lc, LABELS)) {
         // Five of a Kind
-        strcpy(m[6][c[6]], h);
-        c[6]++;
+        strcpy(m[6][c[6]++], h);
     } else if (in(4, lc, LABELS)) {
         // Four of a Kind
-        strcpy(m[5][c[5]], h);
-        c[5]++;
+        strcpy(m[5][c[5]++], h);
     } else if ((in(3, lc, LABELS) && in(2, lc, LABELS))) {
         // Full House
-        strcpy(m[4][c[4]], h);
-        c[4]++;
+        strcpy(m[4][c[4]++], h);
     } else if ((in(3, lc, LABELS) && in(1, lc, LABELS) == 2)) {
         // Three of a kind
-        strcpy(m[3][c[3]], h);
-        c[3]++;
+        strcpy(m[3][c[3]++], h);
     } else if ((in(2, lc, LABELS) == 2 && in(1, lc, LABELS) == 1)) {
         // Two Pair
-        strcpy(m[2][c[2]], h);
-        c[2]++;
+        strcpy(m[2][c[2]++], h);
     } else if ((in(2, lc, LABELS) == 1 && in(1, lc, LABELS) == 3)) {
         // One Pair
-        strcpy(m[1][c[1]], h);
-        c[1]++;
+        strcpy(m[1][c[1]++], h);
     } else if((in(1, lc, LABELS) == 5)) {
         // High Card
-        strcpy(m[0][c[0]], h);
-        c[0]++;
+        strcpy(m[0][c[0]++], h);
     }
 }
 
@@ -143,8 +137,7 @@ void type(char *h)
    return the quantity. */
 int in(int n, int lc[], int limit)
 {
-    int i, c;
-    c = 0;
+    int i, c = 0;
     for (i = 0; i < limit; i++) {
         if (lc[i] == n) {
             c++;
@@ -181,38 +174,13 @@ void sort(char n[][NCHARS], int rows)
 
 int conv(char card)
 {
-switch(card) {
-case 'A':
-    return 14;
-case 'K':
-    return 13;
-case 'Q':
-    return 12;
-case 'J':
-    return 1;   // For Part 1 this value should be "11".
-case 'T':
-    return 10;
-case '9':
-    return 9;
-case '8':
-    return 8;
-case '7':
-    return 7;
-case '6':
-    return 6;
-case '5':
-    return 5;
-case '4':
-    return 4;
-case '3':
-    return 3;
-case '2':
-    return 2;
-}
+    // For Part 1 use: "23456789TJQKA";
+    char *cards = "J23456789TQKA";
+    int i = 0;
+    while(card != *cards++) {
+        i++;
+    }
+    return i;
 }
 
-/* Answer Part 1: 250347426 */
-/* Answer Part 2: 251224870 */
-
-/* For Part 2: change conv() case 'J' from
-11 to 1 */
+// Answers: Part 1: 250347426, Part 2: 251224870
