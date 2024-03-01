@@ -9,11 +9,10 @@ enum {
     MAXCOL = 4
 };
 
-
-unsigned long long pways(int t, unsigned long long d);
+unsigned long pways(int t, unsigned long d);
 
 int f[MAXROW][MAXCOL] = {{49, 78, 79, 80}, {298, 1185, 1066, 1181}};
-long long g[] = {49787980, 298118510661181};
+long g[] = {49787980, 298118510661181};
 
 
 int main(void)
@@ -30,12 +29,12 @@ int main(void)
     printf("Answer Part 2: %i \n", nways);
 }
 
-unsigned long long pways(int t, unsigned long long d)
+
+unsigned long pways(int t, unsigned long d)
 {
     unsigned int c;
-    unsigned long long r, i;
+    unsigned long r, i;
     c = 0;
-
     for (i = 0; i < t; i++) {
         r = (t - i) * i;
         if (r > d) {
@@ -45,5 +44,4 @@ unsigned long long pways(int t, unsigned long long d)
     return c;
 }
 
-// Answer for Part 1: 2269432.
-// Answer for Part 2: 35865985.
+// Answers: Part 1: 2269432, Part 2: 35865985.
