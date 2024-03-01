@@ -17,8 +17,7 @@ long g[] = {49787980, 298118510661181};
 
 int main(void)
 {
-    int i, nways;
-    nways = 1;
+    int i, nways = 1;
     for (i = 0; i < MAXCOL; i++) {
         nways *= pways(f[0][i], f[1][i]);
     }
@@ -32,9 +31,8 @@ int main(void)
 
 unsigned long pways(int t, unsigned long d)
 {
-    unsigned int c;
+    unsigned int c = 0;
     unsigned long r, i;
-    c = 0;
     for (i = 0; i < t; i++) {
         r = (t - i) * i;
         if (r > d) {
