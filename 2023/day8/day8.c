@@ -52,8 +52,7 @@ int main(void)
             strcpy(nodes[c].left, p);
             p = strtok(NULL, " )");
             nodes[c].right = malloc(4 * sizeof(char));
-            strcpy(nodes[c].right, p);
-            c++;
+            strcpy(nodes[c++].right, p);
         }
     }
     fclose(f);
@@ -82,13 +81,11 @@ int main(void)
     }
     printf("Answer Part 1: %i \n", steps);
 
-
     int ewa[10];    // End With A.
     int na = 0;     // Qty of nodes names end with A.
     for (i = 0; i < c; i++) {
         if (nodes[i].name[2] == 'A') {
-            ewa[na] = i;
-            na++;
+            ewa[na++] = i;
         }
     }
 
@@ -168,6 +165,4 @@ long gcd(long a, long b) {
     return a;
 }
 
-/*  Answer Part 1: 19637
-    Answer Part 2: 8811050362409
-*/
+//  Answers: Part 1: 19637, Part 2: 8811050362409.
