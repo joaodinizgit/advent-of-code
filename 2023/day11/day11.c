@@ -1,4 +1,4 @@
-/*  Advent of Code 2023 Day 11 Part 1
+/*  Advent of Code 2023 Day 11 Part 1.
     Author: João Diniz.
     joaodiniz@msn.com
 */
@@ -11,11 +11,19 @@ enum {
     MAXROWS = 200
 };
 
-void doublecol(int col, char *m[], int row);
+struct galaxy {
+    int n; // number.
+    int r; // row.
+    int c; // column.
+};
+
+void dcol(int col, char *m[], int row, int len);
+int sub(int a, int b);
+
 
 int main(void)
 {
-    FILE *f = fopen("example1.txt", "r");
+    FILE *f = fopen("input.txt", "r");
     if (f == NULL) {
         printf("File not found!\n");
         return -1;
@@ -25,14 +33,14 @@ int main(void)
     char line[MAXCHAR] = {};
     while (fgets(line, MAXCHAR, f) != NULL) {
         char *p = strtok(line, "\n");
-        m[r] = (char*)malloc(strlen(p) + 1);
+        m[r] = (char*)malloc(2 * (strlen(p) + 1));
         strcpy(m[r++], p);
     }
+    fclose(f);
 
     int i, j, k, nog;
     int length = strlen(m[0]);
     // Look for rows with no galaxy and double it.
-    printf("Total rows: %i\n", r);
     for (i = 0; i < r; i++) {
         for (j = 0; j < length; j++) {
             if (*(m[i] + j) != '.') {
@@ -40,7 +48,7 @@ int main(void)
             }
             if (j == length - 1) {
                 // Move the rows one line bellow.
-                m[r] = (char*)malloc(length);
+                m[r] = (char*)malloc(2 * length);
                 for (k = r; k > i; k--) {
                     strcpy(m[k], m[k - 1]);
                 }
@@ -50,38 +58,66 @@ int main(void)
         }
     }
 
-    // Check for columns with galaxy.
+    /* Check for columns with no galaxy
+       duplicate if found. */
     for (j = 0; j < length; j++) {
         for (i = 0; i < r; i++) {
             if (*(m[i] + j) != '.') {
                 break;
             }
             if (i == r - 1) {
-                //printf("Cols w/ no galaxy %i\n", j);
-                // Double column to right direction.
-                //printf("%s", m[0]);
-                doublecol(j, m, r);
+                dcol(j, m, r, length);
                 j++;
                 length++;
             }
         }
     }
 
+    /* We don't need to re-draw the map
+       with numbers, we need to know
+       how much # are and where.*/
+
+    // Count #.
+    int gn = 0;
+    struct galaxy g[300] = {};
     for (i = 0; i < r; i++) {
-        printf("%s\n", m[i]);
+        for (j = 0; j < length; j++) {
+            if (m[i][j] == '#') {
+                gn++;
+                g[gn].n = gn;
+                g[gn].r = i;
+                g[gn].c = j;
+            }
+        }
     }
+    printf("There are %i galaxies\n", gn);
 
-
-
-
+    // Generate all pair points;
+    int tpairs = 0;
+    int sumatp = 0;
+    for (i = 1; i <= gn; i++) {
+        for (j = i + 1; j <= gn; j++) {
+            //printf("%i %i \n", i, j);
+            sumatp += (sub(g[i].r, g[j].r) + sub(g[i].c, g[j].c));
+            tpairs++;
+        }
+    }
+    printf("Sum of lengths: %i", sumatp);
 }
 
-void doublecol(int col, char *m[], int row)
+
+int sub(int a, int b)
+{
+    return (a > b) ? (a - b) : (b - a);
+}
+
+
+// dcol: Double column with no galaxy.
+void dcol(int col, char *m[], int row, int len)
 {
     int i, j;
-    int length = strlen(m[0]);
     for (i = 0; i < row; i++) {
-        for (j = length - 1; j >= col; j--) {
+        for (j = len - 1; j >= col; j--) {
             m[i][j + 1] = m[i][j];
         }
     }
