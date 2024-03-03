@@ -8,17 +8,18 @@
 
 enum {
     MAXCHAR = 1000,
-    MAXROWS = 200
+    MAXROWS = 200,
+    FACTOR = 999999
+    //FACTOR = 999999
 };
 
 struct galaxy {
     int n; // number.
-    int r; // row.
-    int c; // column.
+    unsigned long r; // row.
+    unsigned long c; // column.
 };
 
-void dcol(int col, char *m[], int row, int len);
-int sub(int a, int b);
+unsigned long long sub(unsigned long long a, unsigned long long b);
 
 
 int main(void)
@@ -39,36 +40,45 @@ int main(void)
     fclose(f);
 
     int i, j, k, nog;
+    int rowsnogalaxy[100] = {};
     int length = strlen(m[0]);
-    // Look for rows with no galaxy and double it.
+    int nrows = 0;
+    // Look for rows with no galaxy.
     for (i = 0; i < r; i++) {
         for (j = 0; j < length; j++) {
             if (*(m[i] + j) != '.') {
                 break;
             }
             if (j == length - 1) {
+                rowsnogalaxy[nrows++] = i;
+                printf("row %i\n", i);
+                /* Rows 3 and 7 */
                 // Move the rows one line bellow.
-                m[r] = (char*)malloc(2 * length);
+                /*m[r] = (char*)malloc(2 * length);
                 for (k = r; k > i; k--) {
                     strcpy(m[k], m[k - 1]);
-                }
-                r++;
-                i++;
+                } */
+                //r++;
+                //i++;
             }
         }
     }
 
-    /* Check for columns with no galaxy
-       duplicate if found. */
+    int colsnogalaxy[100] = {};
+    int ncols = 0;
+    // Check for columns with no galaxy.
     for (j = 0; j < length; j++) {
         for (i = 0; i < r; i++) {
             if (*(m[i] + j) != '.') {
                 break;
             }
             if (i == r - 1) {
-                dcol(j, m, r, length);
-                j++;
-                length++;
+                printf("Columns with no galaxy %i\n", j);
+                /* Cols 2, 5, 8*/
+                colsnogalaxy[ncols++] = j;
+                //dcol(j, m, r, length);
+                //j++;
+                //length++;
             }
         }
     }
@@ -79,14 +89,32 @@ int main(void)
 
     // Count #.
     int gn = 0;
-    struct galaxy g[300] = {};
+    struct galaxy g[500] = {};
     for (i = 0; i < r; i++) {
         for (j = 0; j < length; j++) {
             if (m[i][j] == '#') {
+                //printf("%s", m[i]);
                 gn++;
+                // galaxy
                 g[gn].n = gn;
-                g[gn].r = i;
-                g[gn].c = j;
+
+                // row
+                int add = 0;
+                for (int a = 0; a < nrows; a++) {
+                    if (i > rowsnogalaxy[a]) {
+                        add += FACTOR;
+                    }
+                }
+                g[gn].r = i + add ;
+
+                add = 0;
+                for (int a = 0; a < ncols; a++) {
+                    if (j > colsnogalaxy[a]) {
+                        add += FACTOR;
+                    }
+                }
+                //col
+                g[gn].c = j + add;
             }
         }
     }
@@ -94,7 +122,7 @@ int main(void)
 
     // Generate all pair points;
     int tpairs = 0;
-    int sumatp = 0;
+    unsigned long long sumatp = 0;
     for (i = 1; i <= gn; i++) {
         for (j = i + 1; j <= gn; j++) {
             //printf("%i %i \n", i, j);
@@ -102,23 +130,12 @@ int main(void)
             tpairs++;
         }
     }
-    printf("Sum of lengths: %i", sumatp);
+    printf("Sum of lengths: %llu", sumatp);
 }
 
 
-int sub(int a, int b)
+unsigned long long sub(unsigned long long a, unsigned long long b)
 {
     return (a > b) ? (a - b) : (b - a);
 }
 
-
-// dcol: Double column with no galaxy.
-void dcol(int col, char *m[], int row, int len)
-{
-    int i, j;
-    for (i = 0; i < row; i++) {
-        for (j = len - 1; j >= col; j--) {
-            m[i][j + 1] = m[i][j];
-        }
-    }
-}
