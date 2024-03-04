@@ -26,27 +26,35 @@ int main(void)
     FILE *f = fopen("input.txt", "r");
     if (f == NULL) {
         printf("File not foud!\n");
-        return 1;
+        exit(1);
     }
 
-    char *line;
+    //char *line = NULL;
     char *map[MAXROWS] = {};
     int nrows = 0;
     int ncols = 0;
-    int i, j;
 
-    line = malloc(MAXCHAR * sizeof(char));
+    char *line = (char*)malloc(MAXCHAR);
+    if (line == NULL) {
+        printf("Failed in allocation memory.\n");
+        exit(1);
+    }
+
     while (fgets(line, MAXCHAR, f) != NULL) {
-        char *p;
-        p = strtok(line, "\n");
-        map[nrows] = malloc((strlen(p) + 1) * sizeof(char));
+        char *p = strtok(line, "\n");
+        map[nrows] = (char*)malloc(strlen(p) + 1);
+        if (map[nrows] == NULL) {
+            printf("Failed in allocation memory.\n");
+            exit(1);
+        }
         strcpy(map[nrows++], p);
     }
-    ncols = strlen(map[0]);
 
+    ncols = strlen(map[0]);
     free(line);
     fclose(f);
 
+    int i, j;
     int row, col;
     for (i = 0; i < nrows; i++) {
         for (j = 0; j < ncols; j++) {
@@ -58,6 +66,7 @@ int main(void)
             }
         }
     }
+
     point s = {row, col};
     char mapvisual[nrows][ncols];
     for (i = 0; i < nrows; i++) {
@@ -66,7 +75,7 @@ int main(void)
         }
     }
 
-    char dir[1];    // Direction
+    char dir[1] = {};    // Direction
     int npoints = 0;
 
     point polygon[MAXPOINTS] = {};

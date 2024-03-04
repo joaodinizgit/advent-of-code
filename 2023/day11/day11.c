@@ -35,7 +35,7 @@ int main(void)
     char line[MAXCHAR] = {};
     while (fgets(line, MAXCHAR, f) != NULL) {
         char *p = strtok(line, "\n");
-        m[r] = (char*)malloc(2 * (strlen(p) + 1));
+        m[r] = (char*)malloc(strlen(p) + 1);
         if (m[r] == NULL) {
             printf("Failed in allocation memory.\n");
             exit(1);
