@@ -76,12 +76,13 @@ int main(void)
 
     // Count galaxies(#) and store its position.
     int gn = 0;
+    int add = 0;
     struct galaxy g[MAXGALAXS] = {};
     for (i = 0; i < r; i++) {
         for (j = 0; j < length; j++) {
             if (m[i][j] == '#') {
                 gn++;
-                int add = 0;
+                add = 0;
                 for (int a = 0; a < nrows; a++) {
                     if (i > rowsnogalaxy[a]) {
                         add += FACTOR - 1;
