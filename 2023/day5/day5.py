@@ -4,7 +4,7 @@ almanac = {}
 locations = []
 
 def main():
-    with open("day5/input.txt", "r") as file:
+    with open("input.txt", "r") as file:
         for line in file:
             text = re.match("[^0-9\\n\s\\:]+", line)
             if text:
@@ -22,7 +22,7 @@ def main():
             seeds = conversor_one(seeds, key)
     print(f"Part 1 answer: {(min(seeds))}")
 
-    print("Calculating Part 2...")
+    # Calculating Part 2
     s = almanac["seeds"][0]
 
     # Verify 10 pairs in a step of 20,000 to obtain approximated lower location.
@@ -37,7 +37,7 @@ def main():
          locations[0][1] + 0,)
 
     lower_location(r, 1)
-    print(f"Lower location is {locations[0][0]}")
+    print(f"Part 2 answer: Lower location is {locations[0][0]}")
 
 
 def lower_location(r, steps):
