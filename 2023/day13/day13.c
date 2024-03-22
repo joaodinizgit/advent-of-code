@@ -24,11 +24,10 @@ int main(void)
         return(-1);
     }
 
-    char line[MAXCHAR];
+    char line[MAXCHAR] = {};
     int linen = 0;
     char *pattern[MAXROWS] = {};
-    int r = 0;
-    int i = 0, j = 0;
+    int r = 0, i = 0, j = 0;
     while (fgets(line, MAXCHAR, f) != NULL) {
         if (line[0] != '\n') {
             char *p = strtok(line, "\n");
