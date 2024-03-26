@@ -1,5 +1,5 @@
-/*  Advent of Code 2023 Day 13 Part 1 and Part 2
-    Author: João Diniz
+/*  Advent of Code 2023 Day 13 Part 1 and 2.
+    Author: João Diniz.
     joaodiniz@msn.com
 */
 #include <stdio.h>
@@ -246,4 +246,4 @@ int expandhev(char *pattern[], int a, int b, int r, int lenline, int dif, int di
 
     return 1;
 }
-// Answers for input.txt: P1: 27505, P2: 27505.
+// Answers for input.txt: P1: 27505, P2: 22906.
