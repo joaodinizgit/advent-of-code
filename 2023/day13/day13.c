@@ -9,7 +9,6 @@
 enum {
     MAXCHAR = 1000,
     MAXROWS = 40,
-    MAXCOLS = 40
 };
 
 int fhori(char *pattern[], int r);
@@ -81,6 +80,7 @@ int main(void)
     printf("TOTAL SUM part 2: %i \n", totalp2);
     return 0;
 }
+
 
 int fhori(char *pattern[], int r)
 {
