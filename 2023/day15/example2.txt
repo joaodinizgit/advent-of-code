@@ -1,1 +1,1 @@
-HASH
+pc=4,ot=9,ab=5,pc=5,ab=6,ot=4
